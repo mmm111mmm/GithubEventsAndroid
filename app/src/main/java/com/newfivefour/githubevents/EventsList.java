@@ -1,7 +1,6 @@
 package com.newfivefour.githubevents;
 
 import android.content.Context;
-import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,14 +16,9 @@ import java.util.ArrayList;
 
 public class EventsList extends FrameLayout {
 
-  @BindingAdapter("app:events")
-  public static void getEvents(EventsList v, ArrayList<AppState.Event> o) {
-    v.setEvents(o);
-  }
-
   private ArrayList<AppState.Event> mEvents;
 
-  private void setEvents(ArrayList<AppState.Event> events) {
+  public void setEvents(ArrayList<AppState.Event> events) {
     mEvents = events;
   }
 

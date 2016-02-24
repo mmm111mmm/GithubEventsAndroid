@@ -5,12 +5,19 @@ import android.widget.TextView;
 
 import com.newfivefour.githubevents.utls.Utils;
 
+import java.util.ArrayList;
+
 public class EventListBAs {
+
+  @BindingAdapter("app:events")
+  public static void getEvents(EventsList v, ArrayList<AppState.Event> o) {
+    v.setEvents(o);
+  }
 
   @BindingAdapter("app:colourtimeago")
   public static void getColourtimeago(TextView v, String s) {
     String timeAgo = Utils.getTimeAgoFromDateString(s);
-    if(timeAgo.contains("minute") || timeAgo.contains("seconds") || timeAgo.contains("hours")) {
+    if(timeAgo.contains("minute") || timeAgo.contains("second") || timeAgo.contains("hour")) {
       v.setTextColor(v.getResources().getColor(android.R.color.holo_green_dark));
     } else {
       v.setTextColor(v.getResources().getColor(R.color.greytext));
