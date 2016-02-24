@@ -14,7 +14,7 @@ import com.newfivefour.githubevents.databinding.EventsListViewBinding;
 
 import java.util.ArrayList;
 
-public class EventsList extends FrameLayout {
+public class EventsListView extends FrameLayout {
 
   private ArrayList<AppState.Event> mEvents;
 
@@ -22,15 +22,15 @@ public class EventsList extends FrameLayout {
     mEvents = events;
   }
 
-  public EventsList(Context context) {
+  public EventsListView(Context context) {
     this(context, null, 0);
   }
 
-  public EventsList(Context context, AttributeSet attrs) {
+  public EventsListView(Context context, AttributeSet attrs) {
     this(context, attrs, 0);
   }
 
-  public EventsList(Context context, AttributeSet attrs, int defStyle) {
+  public EventsListView(Context context, AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
     EventsListViewBinding bd = DataBindingUtil.inflate(
             (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE),

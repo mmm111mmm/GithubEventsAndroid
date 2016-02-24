@@ -9,7 +9,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -57,13 +56,12 @@ public class BindingAdapters {
   @BindingAdapter("app:clickabledestination")
   public static void getClickabledestination(final View v, final String s) {
     v.setClickable(true);
-    v.setOnTouchListener(new View.OnTouchListener() {
+    v.setOnClickListener(new View.OnClickListener() {
       @Override
-      public boolean onTouch(View view, MotionEvent motionEvent) {
+      public void onClick(View view) {
         Intent browse = new Intent( Intent.ACTION_VIEW , Uri.parse( s ) );
         Context context = v.getRootView().getContext();
         context.startActivity( browse );
-        return false;
       }
     });
   }

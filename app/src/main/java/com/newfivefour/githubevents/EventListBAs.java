@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class EventListBAs {
 
   @BindingAdapter("app:events")
-  public static void getEvents(EventsList v, ArrayList<AppState.Event> o) {
+  public static void getEvents(EventsListView v, ArrayList<AppState.Event> o) {
     v.setEvents(o);
   }
 
