@@ -1,4 +1,4 @@
-package com.newfivefour.githubevents;
+package com.newfivefour.githubevents.utls;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -66,5 +67,11 @@ public class BindingAdapters {
       }
     });
   }
+
+  @BindingAdapter("app:eventtime")
+  public static void getEventime(TextView tv, String timeString) {
+    tv.setText(Utils.getTimeAgoFromDateString(timeString));
+  }
+
 
 }

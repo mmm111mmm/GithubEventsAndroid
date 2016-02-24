@@ -19,6 +19,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         app:eventtime="@{event.time}"
+        app:colourtimeago="@{event.time}"
         android:gravity="center_vertical"
         />
     <LinearLayout
