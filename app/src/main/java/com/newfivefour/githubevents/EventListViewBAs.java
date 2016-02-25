@@ -7,7 +7,7 @@ import com.newfivefour.githubevents.utls.Utils;
 
 import java.util.ArrayList;
 
-public class EventListBAs {
+public class EventListViewBAs {
 
   @BindingAdapter("app:events")
   public static void getEvents(EventsListView v, ArrayList<AppState.Event> o) {

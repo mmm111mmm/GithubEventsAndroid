@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.newfivefour.githubevents.databinding.MainActivityBinding;
+import com.newfivefour.githubevents.server.ServerStuff;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -14,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
     MainActivityBinding bd = DataBindingUtil.setContentView(this, R.layout.main_activity);
     setSupportActionBar(bd.toolbar);
     bd.setAppState(new AppState());
+    new ServerStuff().stuff();
   }
 
 }
