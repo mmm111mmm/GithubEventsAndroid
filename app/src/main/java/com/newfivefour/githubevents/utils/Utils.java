@@ -1,4 +1,4 @@
-package com.newfivefour.githubevents.utls;
+package com.newfivefour.githubevents.utils;
 
 import android.util.Log;
 

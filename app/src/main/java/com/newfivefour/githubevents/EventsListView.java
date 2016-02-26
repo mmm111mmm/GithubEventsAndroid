@@ -38,8 +38,12 @@ public class EventsListView extends FrameLayout {
 
   public void setEvents(ArrayList<AppState.Event> events) {
     mEvents = events;
-    bd.recView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-    bd.recView.setAdapter(new EventsListAdapter(mEvents));
+    if(bd.recView.getAdapter()==null) {
+      bd.recView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+      bd.recView.setAdapter(new EventsListAdapter(mEvents));
+    } else {
+      bd.recView.getAdapter().notifyDataSetChanged();
+    }
   }
 
 

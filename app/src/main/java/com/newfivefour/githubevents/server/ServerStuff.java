@@ -37,13 +37,11 @@ public class ServerStuff {
       this.events = events;
       this.user = user;
     }
-
     public JsonArray events;
     public JsonObject user;
   }
 
-  public void stuff() {
-    String login = "newfivefour";
+  public void stuff(String login) {
 
     Retrofit repo = new Retrofit.Builder()
             .baseUrl("https://api.github.com")
@@ -92,12 +90,13 @@ public class ServerStuff {
                   e.setType(a.getAsJsonObject().get("type").getAsString());
                   JsonObject repo = a.getAsJsonObject().get("repo").getAsJsonObject();
                   e.setRepoName(repo.get("name").getAsString());
-                  e.setRepoUrl(repo.get("url").getAsString());
+                  e.setRepoUrl("https://github.com/"+repo.get("name").getAsString());
                   e.setTime(a.getAsJsonObject().get("created_at").getAsString());
                   events.add(e);
                 }
                 AppState.appState.setEvents(events);
                 AppState.appState.setLoading(false);
+                Log.d("HIYA", "Loaded all");
               }
             });
   }

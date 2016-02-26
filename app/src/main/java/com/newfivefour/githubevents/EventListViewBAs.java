@@ -5,7 +5,7 @@ import android.util.Log;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.newfivefour.githubevents.utls.Utils;
+import com.newfivefour.githubevents.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -32,6 +32,9 @@ public class EventListViewBAs {
     switch (s) {
       case "PushEvent":
         tv.setText("Pushed to");
+        break;
+      case "WatchEvent":
+        tv.setText("Watching");
         break;
       case "IssueCommentEvent":
         tv.setText("Commented on");

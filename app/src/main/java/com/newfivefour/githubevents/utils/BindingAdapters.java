@@ -1,4 +1,4 @@
-package com.newfivefour.githubevents.utls;
+package com.newfivefour.githubevents.utils;
 
 import android.content.Context;
 import android.content.Intent;
