@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     >
   <data>
+    <import type="java.util.HashMap"/>
     <variable
         name="appState"
         type="com.newfivefour.githubevents.AppState"
@@ -28,7 +29,7 @@
           android:layout_width="match_parent"
           android:layout_height="?attr/actionBarSize"
           android:background="?attr/colorPrimary"
-          android:title="@{appState.title}"
+          android:title='@{appState.title}'
           app:clickabledestination="@{appState.userUrl}"
           app:loadingimage="@{appState.avatarUrl}"
           app:popupTheme="@style/AppTheme.PopupOverlay"

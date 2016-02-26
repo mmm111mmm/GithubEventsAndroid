@@ -1,8 +1,13 @@
 package com.newfivefour.githubevents;
 
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
+
 import java.util.ArrayList;
 
-public class AppState {
+public class AppState extends BaseObservable {
+
+  public static AppState appState = new AppState();
 
   private ArrayList events = new ArrayList<Event>() {{
     add(new Event("PushEvent", "2016-02-24T03:38:05Z", "https://github.com/newfivefour/nff-github-events", "nff-github-events"));
@@ -13,39 +18,47 @@ public class AppState {
   private String userUrl = "https://github.com/newfivefour";
   private String avatarUrl = "https://avatars0.githubusercontent.com/u/7628223?v=3&s=460";
 
+  @Bindable
   public ArrayList<Event> getEvents() {
     return events;
   }
 
   public void setEvents(ArrayList events) {
     this.events = events;
+    notifyPropertyChanged(com.newfivefour.githubevents.BR.events);
   }
 
+  @Bindable
   public String getTitle() {
     return title;
   }
 
   public void setTitle(String title) {
     this.title = title;
+    notifyPropertyChanged(com.newfivefour.githubevents.BR.title);
   }
 
+  @Bindable
   public String getAvatarUrl() {
     return avatarUrl;
   }
 
   public void setAvatarUrl(String avatarUrl) {
     this.avatarUrl = avatarUrl;
+    notifyPropertyChanged(com.newfivefour.githubevents.BR.avatarUrl);
   }
 
+  @Bindable
   public String getUserUrl() {
     return userUrl;
   }
 
   public void setUserUrl(String userUrl) {
     this.userUrl = userUrl;
+    notifyPropertyChanged(com.newfivefour.githubevents.BR.userUrl);
   }
 
-  public static class Event {
+  public static class Event extends BaseObservable {
     private String type;
     private String time;
     private String repoUrl;
@@ -60,6 +73,7 @@ public class AppState {
       this.repoName = repo_name;
     }
 
+    @Bindable
     public String getType() {
       return type;
     }
@@ -68,6 +82,7 @@ public class AppState {
       this.type = type;
     }
 
+    @Bindable
     public String getTime() {
       return time;
     }
@@ -76,6 +91,7 @@ public class AppState {
       this.time = time;
     }
 
+    @Bindable
     public String getRepoName() {
       return repoName;
     }
@@ -84,6 +100,7 @@ public class AppState {
       this.repoName = repoName;
     }
 
+    @Bindable
     public String getRepoUrl() {
       return repoUrl;
     }

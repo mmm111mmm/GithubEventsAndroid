@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     MainActivityBinding bd = DataBindingUtil.setContentView(this, R.layout.main_activity);
     setSupportActionBar(bd.toolbar);
-    bd.setAppState(new AppState());
+    bd.setAppState(AppState.appState);
     new ServerStuff().stuff();
   }
 

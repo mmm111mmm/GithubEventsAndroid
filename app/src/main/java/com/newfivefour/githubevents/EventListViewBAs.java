@@ -1,8 +1,10 @@
 package com.newfivefour.githubevents;
 
 import android.databinding.BindingAdapter;
+import android.util.Log;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.newfivefour.githubevents.utls.Utils;
 
 import java.util.ArrayList;
@@ -11,6 +13,7 @@ public class EventListViewBAs {
 
   @BindingAdapter("app:events")
   public static void getEvents(EventsListView v, ArrayList<AppState.Event> o) {
+    Log.d("HIYA", "In getEvents with " + new Gson().toJson(o));
     v.setEvents(o);
   }
 

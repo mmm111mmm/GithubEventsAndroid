@@ -27,6 +27,7 @@ public class BindingAdapters {
 
   @BindingAdapter("app:loadingimage")
   public static void setLoadingimage(final Toolbar toolbar, String s) {
+    Log.d("HIYA", "We're now loading: " + s);
     Target t = new Target() {
       @Override
       public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -49,8 +50,7 @@ public class BindingAdapters {
     };
     willinglyStupid(t);
     Picasso with = Picasso.with(toolbar.getContext());
-    with.load("https://avatars.githubusercontent.com/u/1032453?v=3")
-    .into(t);
+    with.load(s).into(t);
   }
 
   @BindingAdapter("app:clickabledestination")

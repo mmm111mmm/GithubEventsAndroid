@@ -3,7 +3,6 @@ package com.newfivefour.githubevents.utls;
 import android.util.Log;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -12,10 +11,10 @@ public class Utils {
 
   public static String getTimeAgoFromDateString(String s) {
     DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
-    Date date = null;
     Date now = new Date();
     try {
-      date = format.parse(s);
+      Log.d("HIYA", "Date is " + s);
+      Date date = format.parse(s);
       int seconds = (int) Math.floor((now.getTime() - date.getTime()) / 1000);
       int interval = (int) Math.floor(seconds / 31536000);
       if(interval == 1) {
@@ -39,7 +38,7 @@ public class Utils {
       if(interval == 1) {
         return interval + " hour ago";
       } else if (interval > 1) {
-        return " hours ago";
+        return interval + " hours ago";
       }
       interval = (int) Math.floor(seconds / 60);
       if(interval == 1) {
@@ -53,7 +52,7 @@ public class Utils {
       } else if(interval > 1) {
         return interval + " seconds ago";
       }
-    } catch (ParseException e) {
+    } catch (Exception e) {
       Log.d("HIYA", "Couldn't parse date: " + e.getMessage());
       e.printStackTrace();
     }

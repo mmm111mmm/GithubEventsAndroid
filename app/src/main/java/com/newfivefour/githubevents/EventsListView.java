@@ -16,11 +16,8 @@ import java.util.ArrayList;
 
 public class EventsListView extends FrameLayout {
 
+  private final EventsListViewBinding bd;
   private ArrayList<AppState.Event> mEvents;
-
-  public void setEvents(ArrayList<AppState.Event> events) {
-    mEvents = events;
-  }
 
   public EventsListView(Context context) {
     this(context, null, 0);
@@ -32,14 +29,19 @@ public class EventsListView extends FrameLayout {
 
   public EventsListView(Context context, AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
-    EventsListViewBinding bd = DataBindingUtil.inflate(
+    bd = DataBindingUtil.inflate(
             (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE),
             R.layout.events_list_view,
             this,
             true);
+  }
+
+  public void setEvents(ArrayList<AppState.Event> events) {
+    mEvents = events;
     bd.recView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     bd.recView.setAdapter(new EventsListAdapter(mEvents));
   }
+
 
   private class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.ViewHolder> {
 
