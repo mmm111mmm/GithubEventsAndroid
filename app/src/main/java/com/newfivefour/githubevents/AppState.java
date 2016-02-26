@@ -17,6 +17,7 @@ public class AppState extends BaseObservable {
   private String title = "newfivefour's events";
   private String userUrl = "https://github.com/newfivefour";
   private String avatarUrl = "https://avatars0.githubusercontent.com/u/7628223?v=3&s=460";
+  private boolean loading = true;
 
   @Bindable
   public ArrayList<Event> getEvents() {
@@ -56,6 +57,16 @@ public class AppState extends BaseObservable {
   public void setUserUrl(String userUrl) {
     this.userUrl = userUrl;
     notifyPropertyChanged(com.newfivefour.githubevents.BR.userUrl);
+  }
+
+  @Bindable
+  public boolean isLoading() {
+    return loading;
+  }
+
+  public void setLoading(boolean loading) {
+    this.loading = loading;
+    notifyPropertyChanged(com.newfivefour.githubevents.BR.loading);
   }
 
   public static class Event extends BaseObservable {

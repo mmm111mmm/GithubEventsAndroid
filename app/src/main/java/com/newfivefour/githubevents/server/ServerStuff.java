@@ -97,6 +97,7 @@ public class ServerStuff {
                   events.add(e);
                 }
                 AppState.appState.setEvents(events);
+                AppState.appState.setLoading(false);
               }
             });
   }

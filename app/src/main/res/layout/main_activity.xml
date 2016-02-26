@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     >
   <data>
-    <import type="java.util.HashMap"/>
+    <import type="android.view.View"/>
     <variable
         name="appState"
         type="com.newfivefour.githubevents.AppState"
@@ -37,16 +37,28 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <com.newfivefour.githubevents.EventsListView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        app:events="@{appState.events}"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        />
+        >
+      <com.newfivefour.githubevents.EventsListView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:visibility="@{appState.loading ? View.GONE: View.VISIBLE}"
+          app:events="@{appState.events}"
+          />
+      <ImageView
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:src="@mipmap/ic_launcher"
+          android:visibility="@{appState.loading ? View.VISIBLE : View.GONE}"
+          />
+    </FrameLayout>
 
   </android.support.design.widget.CoordinatorLayout>
 </layout>
