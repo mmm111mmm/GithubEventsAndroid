@@ -8,7 +8,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -27,11 +26,9 @@ public class BindingAdapters {
 
   @BindingAdapter("app:loadingimage")
   public static void setLoadingimage(final Toolbar toolbar, String s) {
-    Log.d("HIYA", "We're now loading: " + s);
     Target t = new Target() {
       @Override
       public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-        Log.d("HIYA", "onBitmapLoaded");
         Bitmap b = Bitmap.createScaledBitmap(bitmap, 120, 120, false);
         BitmapDrawable icon = new BitmapDrawable(toolbar.getResources(), b);
         toolbar.setNavigationIcon(icon);
@@ -39,13 +36,10 @@ public class BindingAdapters {
       }
 
       @Override
-      public void onBitmapFailed(Drawable errorDrawable) {
-        Log.d("HIYA", "onBitmapFailed");
-      }
+      public void onBitmapFailed(Drawable errorDrawable) { }
 
       @Override
       public void onPrepareLoad(Drawable placeHolderDrawable) {
-        Log.d("HIYA", "onPrepareLoad");
       }
     };
     willinglyStupid(t);

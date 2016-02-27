@@ -4,9 +4,9 @@
       tools:context="com.newfivefour.githubevents.MainActivity"
     >
   <item
-      android:id="@+id/action_settings"
+      android:id="@+id/option_changeusername"
       android:orderInCategory="100"
-      android:title="@string/action_settings"
+      android:title="@string/option_changeusername"
       app:showAsAction="never"
       />
 </menu>

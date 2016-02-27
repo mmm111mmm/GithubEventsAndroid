@@ -11,13 +11,13 @@ public class AppState extends BaseObservable {
 
   private ArrayList events = new ArrayList<Event>() {{
     add(new Event("PushEvent", "2016-02-24T03:38:05Z", "https://github.com/newfivefour/nff-github-events", "nff-github-events"));
-    add(new Event("PushEvent", "2016-02-23T01:38:05Z", "https://github.com/newfivefour/nff-github-events", "nff-github-events"));
-    add(new Event("PushEvent", "2016-01-23T02:38:05Z", "https://github.com/newfivefour/nff-github-events", "nff-github-events"));
   }};
   private String title = "newfivefour's events";
   private String userUrl = "https://github.com/newfivefour";
   private String avatarUrl = "https://avatars0.githubusercontent.com/u/7628223?v=3&s=460";
   private boolean loading = true;
+  private boolean error = false;
+  private boolean showSettings = false;
 
   @Bindable
   public ArrayList<Event> getEvents() {
@@ -67,6 +67,26 @@ public class AppState extends BaseObservable {
   public void setLoading(boolean loading) {
     this.loading = loading;
     notifyPropertyChanged(com.newfivefour.githubevents.BR.loading);
+  }
+
+  @Bindable
+  public boolean isShowSettings() {
+    return showSettings;
+  }
+
+  public void setShowSettings(boolean showSettings) {
+    this.showSettings = showSettings;
+    notifyPropertyChanged(com.newfivefour.githubevents.BR.showSettings);
+  }
+
+  @Bindable
+  public boolean isError() {
+    return error;
+  }
+
+  public void setError(boolean error) {
+    this.error = error;
+    notifyPropertyChanged(com.newfivefour.githubevents.BR.error);
   }
 
   public static class Event extends BaseObservable {

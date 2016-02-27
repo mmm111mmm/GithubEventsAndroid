@@ -6,16 +6,22 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class Utils {
 
   public static String getTimeAgoFromDateString(String s) {
     DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
+    format.setTimeZone(TimeZone.getTimeZone("UTC"));
     Date now = new Date();
     try {
-      Log.d("HIYA", "Date is " + s);
       Date date = format.parse(s);
       int seconds = (int) Math.floor((now.getTime() - date.getTime()) / 1000);
+      if(seconds < 0) {
+        Log.d("HIYA", "Recent is       " + s);
+        Log.d("HIYA", "Current is time " + format.format(now));
+        return "Very, very recently";
+      }
       int interval = (int) Math.floor(seconds / 31536000);
       if(interval == 1) {
         return interval + " year ago";

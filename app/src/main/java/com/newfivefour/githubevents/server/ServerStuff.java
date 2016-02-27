@@ -2,6 +2,7 @@ package com.newfivefour.githubevents.server;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -77,10 +78,12 @@ public class ServerStuff {
               @Override
               public void onError(Throwable e) {
                 Log.d("HIYA", "An error!: " + e.getMessage());
+                AppState.appState.setError(true);
               }
 
               @Override
               public void onNext(UserAndEvents o) {
+                Log.d("HIYA", "Loading " + new Gson().toJson(o));
                 AppState.appState.setAvatarUrl(o.user.get("avatar_url").getAsString());
                 AppState.appState.setTitle(o.user.get("login").getAsString());
                 AppState.appState.setUserUrl(o.user.get("html_url").getAsString());
@@ -96,6 +99,7 @@ public class ServerStuff {
                 }
                 AppState.appState.setEvents(events);
                 AppState.appState.setLoading(false);
+                AppState.appState.setError(false);
                 Log.d("HIYA", "Loaded all");
               }
             });
