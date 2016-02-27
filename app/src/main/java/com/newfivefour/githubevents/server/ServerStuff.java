@@ -103,5 +103,7 @@ public class ServerStuff {
                 Log.d("HIYA", "Loaded all");
               }
             });
+    AppState.appState.setError(false);
+    AppState.appState.setLoading(true);
   }
 }

@@ -2,6 +2,7 @@ package com.newfivefour.githubevents;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,7 +33,11 @@ public class MainActivity extends AppCompatActivity {
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.option_changeusername:
-        AppState.appState.setShowSettings(true);
+        FragmentManager supportFragmentManager = getSupportFragmentManager();
+        if(supportFragmentManager.findFragmentByTag("tag")==null) {
+          UsernameDialogFragment newFragment = UsernameDialogFragment.newInstance();
+          newFragment.show(supportFragmentManager, "tag");
+        }
         break;
     }
     return super.onOptionsItemSelected(item);

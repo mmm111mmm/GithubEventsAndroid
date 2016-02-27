@@ -1,5 +1,11 @@
 package com.newfivefour.githubevents.utils;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.ContextWrapper;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 import java.text.DateFormat;
@@ -63,6 +69,25 @@ public class Utils {
       e.printStackTrace();
     }
     return "unknown time ago";
+  }
+
+  public static Activity scanForActivity(Context cont) {
+    if (cont == null)
+      return null;
+    else if (cont instanceof Activity)
+      return (Activity)cont;
+    else if (cont instanceof ContextWrapper)
+      return scanForActivity(((ContextWrapper)cont).getBaseContext());
+
+    return null;
+  }
+
+  public static void dismissDialogByTag(Context context, String tag) {
+    Activity c = Utils.scanForActivity(context);
+    if(c!=null && c instanceof FragmentActivity) {
+      Fragment f = ((FragmentActivity)c).getSupportFragmentManager().findFragmentByTag(tag);
+      ((DialogFragment)f).dismiss();
+    }
   }
 
 }

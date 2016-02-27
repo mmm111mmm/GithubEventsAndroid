@@ -65,5 +65,12 @@ public class BindingAdapters {
     tv.setText(Utils.getTimeAgoFromDateString(timeString));
   }
 
+  @BindingAdapter("app:textIfNotBlank")
+  public static void getTextIfNotBlank(TextView tv, String s) {
+    if(tv.getText().length()==0) {
+      tv.setText(s);
+    }
+  }
+
 
 }

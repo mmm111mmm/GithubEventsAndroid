@@ -12,7 +12,7 @@ public class AppState extends BaseObservable {
   private ArrayList events = new ArrayList<Event>() {{
     add(new Event("PushEvent", "2016-02-24T03:38:05Z", "https://github.com/newfivefour/nff-github-events", "nff-github-events"));
   }};
-  private String title = "newfivefour's events";
+  private String title = "";
   private String userUrl = "https://github.com/newfivefour";
   private String avatarUrl = "https://avatars0.githubusercontent.com/u/7628223?v=3&s=460";
   private boolean loading = true;
