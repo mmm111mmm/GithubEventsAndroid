@@ -79,6 +79,7 @@ public class ServerStuff {
               public void onError(Throwable e) {
                 Log.d("HIYA", "An error!: " + e.getMessage());
                 AppState.appState.setError(true);
+                AppState.appState.setLoading(false);
               }
 
               @Override

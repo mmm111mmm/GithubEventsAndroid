@@ -5,6 +5,13 @@ import android.databinding.Bindable;
 
 import java.util.ArrayList;
 
+/**
+ * ACTION: Load with no content, update feed
+ * ACTION: Load with no content, show fullscreen error
+ * ACTION: Load with content, update feed
+ * ACTION: Load with content, old feed - show dismissible error
+ */
+
 public class AppState extends BaseObservable {
 
   public static AppState appState = new AppState();

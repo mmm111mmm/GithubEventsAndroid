@@ -46,7 +46,6 @@ public class EventsListView extends FrameLayout {
     }
   }
 
-
   private class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.ViewHolder> {
 
     public EventsListAdapter(ArrayList<AppState.Event> events) {

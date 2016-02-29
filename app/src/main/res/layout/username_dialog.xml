@@ -9,7 +9,7 @@
         />
     <variable
         name="handlers"
-        type="com.newfivefour.githubevents.MainActivityHandlers"
+        type="com.newfivefour.githubevents.SettingsDialogHandlers"
         />
   </data>
   <RelativeLayout

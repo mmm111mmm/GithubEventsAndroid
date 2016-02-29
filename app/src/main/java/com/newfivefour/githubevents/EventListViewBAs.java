@@ -5,14 +5,7 @@ import android.widget.TextView;
 
 import com.newfivefour.githubevents.utils.Utils;
 
-import java.util.ArrayList;
-
 public class EventListViewBAs {
-
-  @BindingAdapter("app:events")
-  public static void getEvents(EventsListView v, ArrayList<AppState.Event> o) {
-    v.setEvents(o);
-  }
 
   @BindingAdapter("app:colourtimeago")
   public static void getColourtimeago(TextView v, String s) {
