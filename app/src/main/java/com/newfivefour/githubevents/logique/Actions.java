@@ -10,19 +10,6 @@ import rx.functions.Func1;
 
 public class Actions {
 
-  public interface ActionsCallback {
-    void sendAction(Action message);
-  }
-  
-  public abstract static class Action<T> {
-    public final T object;
-    public final String name;
-    public Action(String name, T o) {
-      this.name = name;
-      this.object = o;
-    }
-  }
-
   public static class SettingsAction extends Action<Boolean> {
     public SettingsAction(boolean show) {
       super("SETTINGS", show);
@@ -99,5 +86,18 @@ public class Actions {
     public void call(Subscriber<? super Action> subscriber) {
       subscribers.add(subscriber);
     }
+  }
+
+  public abstract static class Action<T> {
+    public final T object;
+    public final String name;
+    public Action(String name, T o) {
+      this.name = name;
+      this.object = o;
+    }
+  }
+
+  public interface ActionsCallback {
+    void sendAction(Action message);
   }
 }

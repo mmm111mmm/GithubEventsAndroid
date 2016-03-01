@@ -83,6 +83,16 @@ public class UseCases {
     }
   };
   // Filters
+  static Func1<Void, Boolean> hasNoShownSettings = new Func1<Void, Boolean>() {
+    @Override public Boolean call(Void as) {
+      return !AppState.appState.isShowSettings();
+    }
+  };
+  static Func1<Void, Boolean> hasShownSettings = new Func1<Void, Boolean>() {
+    @Override public Boolean call(Void as) {
+      return AppState.appState.isShowSettings();
+    }
+  };
   static Func1<AppState, Boolean> hasException = new Func1<AppState, Boolean>() {
     @Override public Boolean call(AppState as) {
       return as.getException() != null;
@@ -129,9 +139,10 @@ public class UseCases {
 
     // Refresh server with new name
     Observable<AppState> serverRefresh = Actions.ServerUpdateAction.react().flatMap(serverEventsMap);
-    // Refresh observers: happy path
-    serverRefresh
-    .filter(hasException)
+    Observable<AppState> serverRefreshParsed = serverRefresh.filter(noException).map(parseUserAndEventsJson);
+    Observable<AppState> serverRefreshFail = serverRefresh.filter(hasException);
+    // Refresh observers: sad path
+    serverRefreshFail
     .map(errorOn)
     .map(loadingOff)
     .subscribe(new Action1<AppState>() { // Go
@@ -139,10 +150,8 @@ public class UseCases {
         Log.d("HIYA", "" + as.getException());
        }
     });
-    // Refresh observers: sad path
-    serverRefresh
-    .filter(noException)
-    .map(parseUserAndEventsJson)
+    // Refresh observers: happy path
+    serverRefreshParsed
     .map(loadingOff)
     .subscribe(new Action1<AppState>() {
       @Override public void call(AppState appState) {
@@ -163,7 +172,13 @@ public class UseCases {
     .subscribe(new Action1<AppState>() {
       @Override public void call(AppState appState) { }
     });
-    // TODO: Dismiss settings dialog when successful
+    // Dismiss settings box on good parse
+    serverRefreshParsed.map(settingsOff).subscribe(new Action1<AppState>() {
+      @Override
+      public void call(AppState appState) {
+
+      }
+    });
     // TODO: Show error in settings dialog
 /*    .map(settingsOff)
     .subscribe(new Action1<AppState>() {
