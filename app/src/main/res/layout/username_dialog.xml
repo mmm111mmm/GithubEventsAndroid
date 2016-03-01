@@ -5,7 +5,7 @@
   <data>
     <variable
         name="appState"
-        type="com.newfivefour.githubevents.AppState"
+        type="com.newfivefour.githubevents.logique.AppState"
         />
     <variable
         name="handlers"

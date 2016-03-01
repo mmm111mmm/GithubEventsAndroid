@@ -1,37 +1,35 @@
-package com.newfivefour.githubevents;
+package com.newfivefour.githubevents.logique;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 
-import java.util.ArrayList;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
-/**
- * ACTION: Load with no content, update feed
- * ACTION: Load with no content, show fullscreen error
- * ACTION: Load with content, update feed
- * ACTION: Load with content, old feed - show dismissible error
- */
+import java.util.ArrayList;
 
 public class AppState extends BaseObservable {
 
   public static AppState appState = new AppState();
 
   private ArrayList events = new ArrayList<Event>() {{
-    add(new Event("PushEvent", "2016-02-24T03:38:05Z", "https://github.com/newfivefour/nff-github-events", "nff-github-events"));
   }};
-  private String title = "";
-  private String userUrl = "https://github.com/newfivefour";
-  private String avatarUrl = "https://avatars0.githubusercontent.com/u/7628223?v=3&s=460";
+  private String title = "newfivefour";
+  private String userUrl = "";
+  private String avatarUrl = "";
   private boolean loading = true;
   private boolean error = false;
   private boolean showSettings = false;
+  private Throwable exception;
+  private JsonObject userJson;
+  private JsonArray eventsJson;
 
   @Bindable
   public ArrayList<Event> getEvents() {
     return events;
   }
 
-  public void setEvents(ArrayList events) {
+  void setEvents(ArrayList events) {
     this.events = events;
     notifyPropertyChanged(com.newfivefour.githubevents.BR.events);
   }
@@ -41,7 +39,7 @@ public class AppState extends BaseObservable {
     return title;
   }
 
-  public void setTitle(String title) {
+  void setTitle(String title) {
     this.title = title;
     notifyPropertyChanged(com.newfivefour.githubevents.BR.title);
   }
@@ -51,7 +49,7 @@ public class AppState extends BaseObservable {
     return avatarUrl;
   }
 
-  public void setAvatarUrl(String avatarUrl) {
+  void setAvatarUrl(String avatarUrl) {
     this.avatarUrl = avatarUrl;
     notifyPropertyChanged(com.newfivefour.githubevents.BR.avatarUrl);
   }
@@ -61,7 +59,7 @@ public class AppState extends BaseObservable {
     return userUrl;
   }
 
-  public void setUserUrl(String userUrl) {
+  void setUserUrl(String userUrl) {
     this.userUrl = userUrl;
     notifyPropertyChanged(com.newfivefour.githubevents.BR.userUrl);
   }
@@ -71,7 +69,7 @@ public class AppState extends BaseObservable {
     return loading;
   }
 
-  public void setLoading(boolean loading) {
+  void setLoading(boolean loading) {
     this.loading = loading;
     notifyPropertyChanged(com.newfivefour.githubevents.BR.loading);
   }
@@ -81,7 +79,7 @@ public class AppState extends BaseObservable {
     return showSettings;
   }
 
-  public void setShowSettings(boolean showSettings) {
+  void setShowSettings(boolean showSettings) {
     this.showSettings = showSettings;
     notifyPropertyChanged(com.newfivefour.githubevents.BR.showSettings);
   }
@@ -91,9 +89,33 @@ public class AppState extends BaseObservable {
     return error;
   }
 
-  public void setError(boolean error) {
+  void setError(boolean error) {
     this.error = error;
     notifyPropertyChanged(com.newfivefour.githubevents.BR.error);
+  }
+
+  public void setException(Throwable exception) {
+    this.exception = exception;
+  }
+
+  void setUserJson(JsonObject userJson) {
+    this.userJson = userJson;
+  }
+
+  void setEventsJson(JsonArray eventsJson) {
+    this.eventsJson = eventsJson;
+  }
+
+  public Throwable getException() {
+    return exception;
+  }
+
+  public JsonArray getEventsJson() {
+    return eventsJson;
+  }
+
+  public JsonObject getUserJson() {
+    return userJson;
   }
 
   public static class Event extends BaseObservable {
@@ -116,7 +138,7 @@ public class AppState extends BaseObservable {
       return type;
     }
 
-    public void setType(String type) {
+    void setType(String type) {
       this.type = type;
     }
 
@@ -125,7 +147,7 @@ public class AppState extends BaseObservable {
       return time;
     }
 
-    public void setTime(String time) {
+    void setTime(String time) {
       this.time = time;
     }
 
@@ -134,7 +156,7 @@ public class AppState extends BaseObservable {
       return repoName;
     }
 
-    public void setRepoName(String repoName) {
+    void setRepoName(String repoName) {
       this.repoName = repoName;
     }
 
@@ -143,7 +165,7 @@ public class AppState extends BaseObservable {
       return repoUrl;
     }
 
-    public void setRepoUrl(String repoUrl) {
+    void setRepoUrl(String repoUrl) {
       this.repoUrl = repoUrl;
     }
   }

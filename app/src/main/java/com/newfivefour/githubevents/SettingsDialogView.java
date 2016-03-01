@@ -3,6 +3,7 @@ package com.newfivefour.githubevents;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,6 +16,8 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.newfivefour.githubevents.databinding.UsernameDialogBinding;
+import com.newfivefour.githubevents.logique.Actions;
+import com.newfivefour.githubevents.logique.AppState;
 import com.newfivefour.githubevents.utils.Utils;
 
 import java.util.ArrayList;
@@ -41,18 +44,26 @@ public class SettingsDialogView extends View {
       return;
     }
     FragmentManager supportFragmentManager = ((FragmentActivity) activity).getSupportFragmentManager();
-    Fragment fragment = supportFragmentManager.findFragmentByTag("tag");
-    if (show && fragment == null) {
+    Fragment frag = supportFragmentManager.findFragmentByTag(UsernameDialogFragment.TAG);
+    if (show && frag == null) {
       UsernameDialogFragment newFragment = UsernameDialogFragment.newInstance();
-      newFragment.show(supportFragmentManager, "tag");
-    } else if (show && fragment instanceof DialogFragment) {
-      ((DialogFragment) fragment).show(supportFragmentManager, "tag");
-    } else if (!show && fragment!=null && (fragment instanceof DialogFragment)) {
-      ((DialogFragment) fragment).dismiss();
+      newFragment.show(supportFragmentManager, UsernameDialogFragment.TAG);
+    }
+    if(frag==null || !(frag instanceof DialogFragment)){
+      return;
+    }
+    DialogFragment fragment = (DialogFragment) frag;
+    boolean v = frag.isVisible();
+    if (show && !frag.isAdded()) {
+      fragment.show(supportFragmentManager, UsernameDialogFragment.TAG);
+    } else if (!show) {
+      fragment.dismiss();
     }
   }
 
   public static class UsernameDialogFragment extends android.support.v4.app.DialogFragment {
+
+    public static String TAG = "AUSERNAMEFRAGMENTDIALOG";
 
     public static UsernameDialogFragment newInstance() {
       UsernameDialogFragment dialogue = new UsernameDialogFragment();
@@ -82,10 +93,15 @@ public class SettingsDialogView extends View {
     }
 
     @Override
+    public void onDismiss(DialogInterface dialog) {
+      Actions.send("NOSETTINGS");
+      super.onDismiss(dialog);
+    }
+
+    @Override
     public void onDestroyView() {
       // Used because of a bug in the support library
-      if (getDialog() != null && getRetainInstance())
-        getDialog().setDismissMessage(null);
+      if (getDialog() != null && getRetainInstance()) getDialog().setDismissMessage(null);
       super.onDestroyView();
     }
   }

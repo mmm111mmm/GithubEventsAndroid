@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 
 import com.newfivefour.githubevents.databinding.EventsListItemBinding;
 import com.newfivefour.githubevents.databinding.EventsListViewBinding;
+import com.newfivefour.githubevents.logique.AppState;
 
 import java.util.ArrayList;
 

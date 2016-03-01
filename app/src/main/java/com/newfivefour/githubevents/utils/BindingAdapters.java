@@ -42,22 +42,26 @@ public class BindingAdapters {
       public void onPrepareLoad(Drawable placeHolderDrawable) {
       }
     };
-    willinglyStupid(t);
-    Picasso with = Picasso.with(toolbar.getContext());
-    with.load(s).into(t);
+    if(s!=null && s.length()>0) {
+      willinglyStupid(t);
+      Picasso with = Picasso.with(toolbar.getContext());
+      with.load(s).into(t);
+    }
   }
 
   @BindingAdapter("app:clickabledestination")
   public static void getClickabledestination(final View v, final String s) {
     v.setClickable(true);
-    v.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        Intent browse = new Intent( Intent.ACTION_VIEW , Uri.parse( s ) );
-        Context context = v.getRootView().getContext();
-        context.startActivity( browse );
-      }
-    });
+    if(s!=null && s.length()>0) {
+      v.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+          Intent browse = new Intent( Intent.ACTION_VIEW , Uri.parse( s ) );
+          Context context = v.getRootView().getContext();
+          context.startActivity( browse );
+        }
+      });
+    }
   }
 
   @BindingAdapter("app:eventtime")

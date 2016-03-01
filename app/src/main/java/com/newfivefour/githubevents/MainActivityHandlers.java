@@ -2,13 +2,12 @@ package com.newfivefour.githubevents;
 
 import android.view.View;
 
-import com.newfivefour.githubevents.server.ServerStuff;
+import com.newfivefour.githubevents.logique.Actions;
 
 public class MainActivityHandlers {
 
   public void onRefresh(View v) {
-    AppState.appState.setLoading(true);
-    new ServerStuff().stuff(v.getResources().getString(R.string.username));
+    Actions.send("REFRESH");
   }
 
 }

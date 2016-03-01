@@ -8,18 +8,21 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.newfivefour.githubevents.databinding.MainActivityBinding;
-import com.newfivefour.githubevents.server.ServerStuff;
+import com.newfivefour.githubevents.logique.Actions;
+import com.newfivefour.githubevents.logique.AppState;
+import com.newfivefour.githubevents.logique.UseCases;
 
 public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    UseCases.init();
     MainActivityBinding bd = DataBindingUtil.setContentView(this, R.layout.main_activity);
     setSupportActionBar(bd.toolbar);
     bd.setAppState(AppState.appState);
     bd.setHandlers(new MainActivityHandlers());
-    new ServerStuff().stuff(getString(R.string.username));
+    Actions.send("REFRESH");
   }
 
   @Override
@@ -32,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.option_changeusername:
-        AppState.appState.setShowSettings(true);
+        Actions.send("SETTINGS");
         break;
     }
     return super.onOptionsItemSelected(item);
