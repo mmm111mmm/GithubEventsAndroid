@@ -9,10 +9,8 @@ import com.newfivefour.githubevents.logique.Actions;
 public class SettingsDialogHandlers {
   public boolean onUsernameChange(TextView textView, int i, KeyEvent keyEvent) {
     if(i==EditorInfo.IME_ACTION_DONE) {
-      //new UseCases().stuff(textView.getText().toString());
-      Actions.send("NEWUSERNAME");
+      Actions.changeUsername(textView.getText().toString());
     }
     return false;
   }
-
 }

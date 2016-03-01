@@ -94,7 +94,7 @@ public class SettingsDialogView extends View {
 
     @Override
     public void onDismiss(DialogInterface dialog) {
-      Actions.send("NOSETTINGS");
+      Actions.settings(false);
       super.onDismiss(dialog);
     }
 

@@ -11,43 +11,84 @@ import rx.functions.Func1;
 public class Actions {
 
   public interface ActionsCallback {
-    void sendAction(String message);
+    void sendAction(Action message);
+  }
+  
+  public abstract static class Action<T> {
+    public final T object;
+    public final String name;
+    public Action(String name, T o) {
+      this.name = name;
+      this.object = o;
+    }
   }
 
-  public static Func1<String, Boolean> isRefresh = new Func1<String, Boolean>() {
-    @Override public Boolean call(String action) {
-      return action.equals("REFRESH");
+  public static class SettingsAction extends Action<Boolean> {
+    public SettingsAction(boolean show) {
+      super("SETTINGS", show);
     }
-  };
+    public static Observable<Action> reactNoSettings() {
+      return actionSent.filter(new Func1<Action, Boolean>() {
+        @Override
+        public Boolean call(Action action) {
+          return action instanceof SettingsAction && !((SettingsAction)action).object;
+        }
+      });
+    }
+    public static Observable<Action> react() {
+      return actionSent.filter(new Func1<Action, Boolean>() {
+        @Override
+        public Boolean call(Action action) {
+          return action instanceof SettingsAction && ((SettingsAction)action).object;
+        }
+      });
+    }
+  }
 
-  public static Func1<String, Boolean> isSettings = new Func1<String, Boolean>() {
-    @Override public Boolean call(String action) {
-      return action.equals("SETTINGS");
+  public static class ServerUpdateAction extends Action<String> {
+    public ServerUpdateAction(String username) {
+      super("USERNAMEUPDATE", username);
     }
-  };
-
-  public static Func1<String, Boolean> isNoSettings = new Func1<String, Boolean>() {
-    @Override public Boolean call(String action) {
-      return action.equals("NOSETTINGS");
+    public static Observable<String> react() {
+      return actionSent.filter(new Func1<Action, Boolean>() {
+        @Override
+        public Boolean call(Action action) {
+          return action instanceof ServerUpdateAction;
+        }
+      })
+      .flatMap(new Func1<Action, Observable<String>>() {
+        @Override
+        public Observable<String> call(Action action) {
+          return Observable.just(((ServerUpdateAction)action).object);
+        }
+      });
     }
-  };
+  }
 
   private static ActionsCallback callback;
-  public static Observable<String> actionSent = Observable.create(new ActionsObservable());
+  public static Observable<Action> actionSent = Observable.create(new ActionsObservable());
 
-  public static void send(String message) {
-    callback.sendAction(message);
+  public static void refresh() {
+    callback.sendAction(new ServerUpdateAction(AppState.appState.getTitle()));
   }
 
-  public static class ActionsObservable implements  Observable.OnSubscribe<String> {
-    ArrayList<Subscriber<? super String>> subscribers = new ArrayList<>();
+  public static void changeUsername(String username) {
+    callback.sendAction(new ServerUpdateAction(username));
+  }
+
+  public static void settings(boolean show) {
+    callback.sendAction(new SettingsAction(show));
+  }
+
+  public static class ActionsObservable implements  Observable.OnSubscribe<Action> {
+    ArrayList<Subscriber<? super Action>> subscribers = new ArrayList<>();
 
     public ActionsObservable() {
       Actions.callback = new ActionsCallback() {
         @Override
-        public void sendAction(String message) {
+        public void sendAction(Action message) {
           Log.d("HIYA", "Action: " + message);
-          for (Subscriber<? super String> sub : subscribers) {
+          for (Subscriber<? super Action> sub : subscribers) {
             sub.onNext(message);
           }
         }
@@ -55,7 +96,7 @@ public class Actions {
     }
 
     @Override
-    public void call(Subscriber<? super String> subscriber) {
+    public void call(Subscriber<? super Action> subscriber) {
       subscribers.add(subscriber);
     }
   }

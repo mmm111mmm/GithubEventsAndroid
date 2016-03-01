@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
     setSupportActionBar(bd.toolbar);
     bd.setAppState(AppState.appState);
     bd.setHandlers(new MainActivityHandlers());
-    Actions.send("REFRESH");
+    Actions.refresh();
   }
 
   @Override
@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.option_changeusername:
-        Actions.send("SETTINGS");
+        Actions.settings(true);
         break;
     }
     return super.onOptionsItemSelected(item);

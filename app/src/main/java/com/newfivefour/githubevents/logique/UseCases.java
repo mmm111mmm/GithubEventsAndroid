@@ -8,11 +8,6 @@ import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.GET;
-import retrofit2.http.Path;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -21,23 +16,6 @@ import rx.functions.Func3;
 import rx.schedulers.Schedulers;
 
 public class UseCases {
-
-  interface GitHubUser {
-    @GET("users/{user}")
-    Observable<JsonObject> getUser(@Path("user") String user);
-  }
-  interface GitHubEvents {
-    @GET("users/{user}/events")
-    Observable<JsonArray> listEvents(@Path("user") String user);
-  }
-
-  static private Retrofit sRepo = new Retrofit.Builder()
-          .baseUrl("https://api.github.com")
-          .addConverterFactory(GsonConverterFactory.create())
-          .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-          .build();
-  static private GitHubUser ghUser = sRepo.create(GitHubUser.class);
-  static private GitHubEvents ghEvents = sRepo.create(GitHubEvents.class);
 
   // State modifiers
   static Func1<AppState, AppState> loadingOn = new Func1<AppState, AppState>() { // loading on
@@ -115,19 +93,12 @@ public class UseCases {
       return as.getException() == null;
     }
   };
-  // Misc...?
-  public static Func1<Object, String> usernameFromAppState = new Func1<Object, String>() {
-    @Override
-    public String call(Object o) {
-      return AppState.appState.getTitle();
-    }
-  };
 
   public static void init() {
     // Server observable list
     final Observable<AppState> appStateObservable = Observable.just(AppState.appState);
-    Func1<String, Observable<AppState>> appStateMap = new Func1<String, Observable<AppState>>() {
-      @Override public Observable<AppState> call(String s) {
+    Func1<Object, Observable<AppState>> appStateMap = new Func1<Object, Observable<AppState>>() {
+      @Override public Observable<AppState> call(Object s) {
         return appStateObservable;
       }
     };
@@ -137,10 +108,10 @@ public class UseCases {
         appStateObservable
           .map(errorOff)
           .map(loadingOn),
-        ghUser.getUser(username)
+        Server.ghUser.getUser(username)
           .subscribeOn(Schedulers.newThread())
           .observeOn(AndroidSchedulers.mainThread()),
-        ghEvents.listEvents(username)
+        Server.ghEvents.listEvents(username)
           .subscribeOn(Schedulers.newThread())
           .observeOn(AndroidSchedulers.mainThread()),
         new Func3<AppState, JsonObject, JsonArray, AppState>() {
@@ -155,11 +126,11 @@ public class UseCases {
           return AppState.appState;
         }});
       }};
+
+    // Refresh server with new name
+    Observable<AppState> serverRefresh = Actions.ServerUpdateAction.react().flatMap(serverEventsMap);
     // Refresh observers: happy path
-    Actions.actionSent
-    .filter(Actions.isRefresh)
-    .map(usernameFromAppState)
-    .flatMap(serverEventsMap)
+    serverRefresh
     .filter(hasException)
     .map(errorOn)
     .map(loadingOff)
@@ -169,10 +140,7 @@ public class UseCases {
        }
     });
     // Refresh observers: sad path
-    Actions.actionSent
-    .filter(Actions.isRefresh)
-    .map(usernameFromAppState)
-    .flatMap(serverEventsMap)
+    serverRefresh
     .filter(noException)
     .map(parseUserAndEventsJson)
     .map(loadingOff)
@@ -182,20 +150,24 @@ public class UseCases {
       }
     });
     // Show settings
-    Actions.actionSent
-    .filter(Actions.isSettings)
+    Actions.SettingsAction.react()
     .flatMap(appStateMap)
     .map(settingsOn)
     .subscribe(new Action1<AppState>() {
       @Override public void call(AppState appState) { }
     });
     // Dismiss settings
-    Actions.actionSent
-    .filter(Actions.isNoSettings)
+    Actions.SettingsAction.reactNoSettings()
     .flatMap(appStateMap)
     .map(settingsOff)
     .subscribe(new Action1<AppState>() {
       @Override public void call(AppState appState) { }
     });
+    // TODO: Dismiss settings dialog when successful
+    // TODO: Show error in settings dialog
+/*    .map(settingsOff)
+    .subscribe(new Action1<AppState>() {
+      @Override public void call(AppState appState) { }
+    });*/
   }
 }
