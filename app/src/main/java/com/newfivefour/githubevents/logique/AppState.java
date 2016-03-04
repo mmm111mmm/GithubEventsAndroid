@@ -8,6 +8,8 @@ import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 
+import rx.functions.Func1;
+
 public class AppState extends BaseObservable {
 
   public static AppState appState = new AppState();
@@ -19,6 +21,7 @@ public class AppState extends BaseObservable {
   private String avatarUrl = "";
   private boolean loading = true;
   private boolean error = false;
+  private boolean popupError = false;
   private boolean showSettings = false;
   private Throwable exception;
   private JsonObject userJson;
@@ -73,6 +76,25 @@ public class AppState extends BaseObservable {
     this.loading = loading;
     notifyPropertyChanged(com.newfivefour.githubevents.BR.loading);
   }
+  Func1<AppState, AppState> setLoadingOnMap() {
+    return new Func1<AppState, AppState>() {
+      @Override
+      public AppState call(AppState appState) {
+        appState.setLoading(true);
+        return appState;
+      }
+    };
+  }
+  Func1<AppState, AppState> setLoadingOffMap() {
+    return new Func1<AppState, AppState>() {
+      @Override
+      public AppState call(AppState appState) {
+        appState.setLoading(false);
+        return appState;
+      }
+    };
+  }
+
 
   @Bindable
   public boolean isShowSettings() {
@@ -83,6 +105,24 @@ public class AppState extends BaseObservable {
     this.showSettings = showSettings;
     notifyPropertyChanged(com.newfivefour.githubevents.BR.showSettings);
   }
+  Func1<AppState, AppState> setSettingsOnMap() {
+    return new Func1<AppState, AppState>() {
+      @Override
+      public AppState call(AppState appState) {
+        appState.setShowSettings(true);
+        return appState;
+      }
+    };
+  }
+  Func1<AppState, AppState> setSettingsOffMap() {
+    return new Func1<AppState, AppState>() {
+      @Override
+      public AppState call(AppState appState) {
+        appState.setShowSettings(false);
+        return appState;
+      }
+    };
+  }
 
   @Bindable
   public boolean isError() {
@@ -92,6 +132,25 @@ public class AppState extends BaseObservable {
   void setError(boolean error) {
     this.error = error;
     notifyPropertyChanged(com.newfivefour.githubevents.BR.error);
+  }
+
+  Func1<AppState, AppState> setErrorOnMap() {
+    return new Func1<AppState, AppState>() {
+      @Override
+      public AppState call(AppState appState) {
+        appState.setError(true);
+        return appState;
+      }
+    };
+  }
+  Func1<AppState, AppState> setErrorOffMap() {
+    return new Func1<AppState, AppState>() {
+      @Override
+      public AppState call(AppState appState) {
+        appState.setError(false);
+        return appState;
+      }
+    };
   }
 
   public void setException(Throwable exception) {
@@ -116,6 +175,35 @@ public class AppState extends BaseObservable {
 
   public JsonObject getUserJson() {
     return userJson;
+  }
+
+  @Bindable
+  public boolean isPopupError() {
+    return popupError;
+  }
+
+  public void setPopupError(boolean popupError) {
+    this.popupError = popupError;
+    notifyPropertyChanged(com.newfivefour.githubevents.BR.popupError);
+  }
+
+  Func1<AppState, AppState> setPopupErrorOnMap() {
+    return new Func1<AppState, AppState>() {
+      @Override
+      public AppState call(AppState appState) {
+        appState.setPopupError(true);
+        return appState;
+      }
+    };
+  }
+  Func1<AppState, AppState> setPopupErrorOffMap() {
+    return new Func1<AppState, AppState>() {
+      @Override
+      public AppState call(AppState appState) {
+        appState.setPopupError(false);
+        return appState;
+      }
+    };
   }
 
   public static class Event extends BaseObservable {

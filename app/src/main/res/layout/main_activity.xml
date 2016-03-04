@@ -19,6 +19,7 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:fitsSystemWindows="true"
+      android:id="@+id/mainactivity_coordinatorlayout"
       tools:context="com.newfivefour.githubevents.MainActivity"
       >
 
@@ -27,7 +28,6 @@
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay"
         >
-
       <android.support.v7.widget.Toolbar
           android:id="@+id/toolbar"
           android:layout_width="match_parent"
@@ -38,7 +38,6 @@
           app:loadingimage="@{appState.avatarUrl}"
           app:popupTheme="@style/AppTheme.PopupOverlay"
           />
-
     </android.support.design.widget.AppBarLayout>
     <com.newfivefour.githubevents.EventsListView
         android:id="@+id/eventslistview"
@@ -51,17 +50,6 @@
         android:visibility="@{appState.loading ? View.GONE: View.VISIBLE}"
         app:setEvents="@{appState.events}"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        />
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_anchor="@id/eventslistview"
-        app:layout_anchorGravity="bottom|right"
-        android:layout_margin="8dp"
-        android:src="@mipmap/ic_launcher"
-        app:layout_behavior="com.newfivefour.githubevents.utils.ScrollAwareFABBehavior"
-        android:onClick="@{handlers.onRefresh}"
-        android:visibility="@{appState.loading ? View.GONE: View.VISIBLE}"
         />
     <ProgressBar
         style="?android:attr/progressBarStyleLarge"
@@ -91,11 +79,26 @@
           android:drawableLeft="@android:drawable/stat_notify_error"
           />
     </RelativeLayout>
+    <com.newfivefour.githubevents.ErrorPopupView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        app:setShow="@{appState.popupError}"
+        />
     <com.newfivefour.githubevents.SettingsDialogView
         app:show="@{appState.showSettings}"
         android:layout_width="0dp"
         android:layout_height="0dp"
         />
-
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_anchorGravity="bottom|right"
+        app:layout_anchor="@+id/mainactivity_coordinatorlayout"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="8dp"
+        android:src="@mipmap/ic_launcher"
+        app:layout_behavior="com.newfivefour.githubevents.utils.ScrollAwareFABBehavior"
+        android:onClick="@{handlers.onRefresh}"
+        />
   </android.support.design.widget.CoordinatorLayout>
 </layout>

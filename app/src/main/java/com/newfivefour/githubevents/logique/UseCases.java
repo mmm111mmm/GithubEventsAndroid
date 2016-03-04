@@ -1,7 +1,5 @@
 package com.newfivefour.githubevents.logique;
 
-import android.util.Log;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -9,56 +7,15 @@ import com.google.gson.JsonObject;
 import java.util.ArrayList;
 
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.functions.Func3;
-import rx.schedulers.Schedulers;
+import rx.observables.ConnectableObservable;
 
 public class UseCases {
 
-  // State modifiers
-  static Func1<AppState, AppState> loadingOn = new Func1<AppState, AppState>() { // loading on
-    @Override
-    public AppState call(AppState as) {
-      as.setLoading(true);
-      return as;
-    }
-  };
-  static Func1<AppState, AppState> loadingOff = new Func1<AppState, AppState>() { // loading off
-    @Override
-    public AppState call(AppState as) {
-      as.setLoading(false);
-      return as;
-    }
-  };
-  static Func1<AppState, AppState> errorOn = new Func1<AppState, AppState>() { // Set error
-    @Override
-    public AppState call(AppState as) {
-      as.setError(true);
-      return as;
-    }
-  };
-  static Func1<AppState, AppState> errorOff = new Func1<AppState, AppState>() { // Set error
-    @Override
-    public AppState call(AppState as) {
-      as.setError(false);
-      return as;
-    }
-  };
-  static Func1<AppState, AppState> settingsOn = new Func1<AppState, AppState>() { // Settings on
-    @Override
-    public AppState call(AppState as) {
-      as.setShowSettings(true);
-      return as;
-    }
-  };
-  static Func1<AppState, AppState> settingsOff = new Func1<AppState, AppState>() { // Settings on
-    @Override
-    public AppState call(AppState as) {
-      as.setShowSettings(false);
-      return as;
-    }
+  static Action1<AppState> emptySubscribe = new Action1<AppState>() {
+    @Override public void call(AppState appState) {}
   };
   static Func1<AppState, AppState> parseUserAndEventsJson = new Func1<AppState, AppState>() { // Parse JSON
     @Override
@@ -82,7 +39,19 @@ public class UseCases {
       return appState;
     }
   };
-  // Filters
+   // Filters
+  static Func1<AppState, Boolean> areEvents = new Func1<AppState, Boolean>() {
+     @Override
+     public Boolean call(AppState appState) {
+      return AppState.appState.getEvents() == null || AppState.appState.getEvents().size() == 0;
+    }
+   };
+  static Func1<AppState, Boolean> areNoEvents = new Func1<AppState, Boolean>() {
+    @Override
+    public Boolean call(AppState appState) {
+      return AppState.appState.getEvents() == null || AppState.appState.getEvents().size() == 0;
+    }
+  };
   static Func1<Void, Boolean> hasNoShownSettings = new Func1<Void, Boolean>() {
     @Override public Boolean call(Void as) {
       return !AppState.appState.isShowSettings();
@@ -115,17 +84,12 @@ public class UseCases {
     Func1<String, Observable<AppState>> serverEventsMap = new Func1<String, Observable<AppState>>() {
       @Override public Observable<AppState> call(String username) {
       return Observable.zip(
-        appStateObservable
-          .map(errorOff)
-          .map(loadingOn),
-        Server.ghUser.getUser(username)
-          .subscribeOn(Schedulers.newThread())
-          .observeOn(AndroidSchedulers.mainThread()),
-        Server.ghEvents.listEvents(username)
-          .subscribeOn(Schedulers.newThread())
-          .observeOn(AndroidSchedulers.mainThread()),
+        appStateObservable,
+        Server.ghUser.getUser(username).compose(Server.composeAndroidSchedulers(new JsonObject())),
+        Server.ghEvents.listEvents(username).compose(Server.composeAndroidSchedulers(new JsonArray())),
         new Func3<AppState, JsonObject, JsonArray, AppState>() {
           @Override public AppState call(AppState appState, JsonObject jsonObject, JsonArray jsonElements) {
+            appState.setException(null);
             appState.setEventsJson(jsonElements);
             appState.setUserJson(jsonObject);
             return AppState.appState;
@@ -138,51 +102,47 @@ public class UseCases {
       }};
 
     // Refresh server with new name
-    Observable<AppState> serverRefresh = Actions.ServerUpdateAction.react().flatMap(serverEventsMap);
+    Observable<String> serverUpdateRequest = Actions.ServerUpdateAction.react();
+    ConnectableObservable<AppState> serverRefresh = serverUpdateRequest.flatMap(serverEventsMap).publish();
     Observable<AppState> serverRefreshParsed = serverRefresh.filter(noException).map(parseUserAndEventsJson);
     Observable<AppState> serverRefreshFail = serverRefresh.filter(hasException);
-    // Refresh observers: sad path
-    serverRefreshFail
-    .map(errorOn)
-    .map(loadingOff)
-    .subscribe(new Action1<AppState>() { // Go
-       @Override public void call(AppState as) {
-        Log.d("HIYA", "" + as.getException());
-       }
-    });
-    // Refresh observers: happy path
+
+    // Start loading and clear errors on service load
+    serverUpdateRequest.flatMap(appStateMap)
+    .map(AppState.appState.setLoadingOnMap())
+    .map(AppState.appState.setPopupErrorOffMap())
+    .map(AppState.appState.setErrorOffMap())
+    .subscribe(emptySubscribe);
+    // Stop loading page after a server refresh
+    serverRefresh.map(AppState.appState.setLoadingOffMap())
+    .subscribe(emptySubscribe);
+    // Parse good server return
     serverRefreshParsed
-    .map(loadingOff)
-    .subscribe(new Action1<AppState>() {
-      @Override public void call(AppState appState) {
-        Log.d("HIYA", "NO ERROR");
-      }
-    });
+    .subscribe(emptySubscribe);
+    // Show page error when no content
+    serverRefreshFail.filter(areNoEvents)
+    .map(AppState.appState.setErrorOnMap())
+    .subscribe(emptySubscribe);
+    // Show popup error when content
+    serverRefreshFail.filter(areEvents)
+    .map(AppState.appState.setPopupErrorOnMap())
+    .subscribe(emptySubscribe);
     // Show settings
     Actions.SettingsAction.react()
     .flatMap(appStateMap)
-    .map(settingsOn)
-    .subscribe(new Action1<AppState>() {
-      @Override public void call(AppState appState) { }
-    });
+    .map(AppState.appState.setSettingsOnMap())
+    .subscribe(emptySubscribe);
     // Dismiss settings
     Actions.SettingsAction.reactNoSettings()
     .flatMap(appStateMap)
-    .map(settingsOff)
-    .subscribe(new Action1<AppState>() {
-      @Override public void call(AppState appState) { }
-    });
+    .map(AppState.appState.setSettingsOffMap())
+    .subscribe(emptySubscribe);
     // Dismiss settings box on good parse
-    serverRefreshParsed.map(settingsOff).subscribe(new Action1<AppState>() {
-      @Override
-      public void call(AppState appState) {
+    serverRefreshParsed
+    .map(AppState.appState.setSettingsOffMap())
+    .subscribe(emptySubscribe);
 
-      }
-    });
-    // TODO: Show error in settings dialog
-/*    .map(settingsOff)
-    .subscribe(new Action1<AppState>() {
-      @Override public void call(AppState appState) { }
-    });*/
+    serverRefresh.connect();
   }
+
 }

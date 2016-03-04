@@ -46,6 +46,7 @@ public class Actions {
       .flatMap(new Func1<Action, Observable<String>>() {
         @Override
         public Observable<String> call(Action action) {
+          Log.d("HIYA", "flatmap Action: ");
           return Observable.just(((ServerUpdateAction)action).object);
         }
       });

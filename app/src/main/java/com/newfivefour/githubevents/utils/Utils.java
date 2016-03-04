@@ -3,10 +3,12 @@ package com.newfivefour.githubevents.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.View;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -80,6 +82,16 @@ public class Utils {
       return scanForActivity(((ContextWrapper)cont).getBaseContext());
 
     return null;
+  }
+
+  public static CoordinatorLayout scanForCoordinator(View cont) {
+    if (cont == null) {
+      Log.d("HIYA", "Couldn't find a Coordinator view. Bad sign. Bad sign.");
+      return null;
+    } else if (cont instanceof CoordinatorLayout)
+      return (CoordinatorLayout)cont;
+    else
+      return scanForCoordinator((View)cont.getParent());
   }
 
   public static void dismissDialogByTag(Context context, String tag) {
