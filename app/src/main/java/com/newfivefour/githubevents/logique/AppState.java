@@ -3,19 +3,13 @@ package com.newfivefour.githubevents.logique;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-
 import java.util.ArrayList;
-
-import rx.functions.Func1;
 
 public class AppState extends BaseObservable {
 
   public static AppState appState = new AppState();
 
-  private ArrayList events = new ArrayList<Event>() {{
-  }};
+  private ArrayList events = new ArrayList<Event>() {{}};
   private String title = "newfivefour";
   private String attemptedUsername = "";
   private String userUrl = "";
@@ -25,8 +19,6 @@ public class AppState extends BaseObservable {
   private boolean popupError = false;
   private boolean showSettings = false;
   private Throwable exception;
-  private JsonObject userJson;
-  private JsonArray eventsJson;
 
   @Bindable
   public ArrayList<Event> getEvents() {
@@ -77,25 +69,6 @@ public class AppState extends BaseObservable {
     this.loading = loading;
     notifyPropertyChanged(com.newfivefour.githubevents.BR.loading);
   }
-  Func1<AppState, AppState> setLoadingOnMap() {
-    return new Func1<AppState, AppState>() {
-      @Override
-      public AppState call(AppState appState) {
-        appState.setLoading(true);
-        return appState;
-      }
-    };
-  }
-  Func1<AppState, AppState> setLoadingOffMap() {
-    return new Func1<AppState, AppState>() {
-      @Override
-      public AppState call(AppState appState) {
-        appState.setLoading(false);
-        return appState;
-      }
-    };
-  }
-
 
   @Bindable
   public boolean isShowSettings() {
@@ -105,24 +78,6 @@ public class AppState extends BaseObservable {
   void setShowSettings(boolean showSettings) {
     this.showSettings = showSettings;
     notifyPropertyChanged(com.newfivefour.githubevents.BR.showSettings);
-  }
-  Func1<AppState, AppState> setSettingsOnMap() {
-    return new Func1<AppState, AppState>() {
-      @Override
-      public AppState call(AppState appState) {
-        appState.setShowSettings(true);
-        return appState;
-      }
-    };
-  }
-  Func1<AppState, AppState> setSettingsOffMap() {
-    return new Func1<AppState, AppState>() {
-      @Override
-      public AppState call(AppState appState) {
-        appState.setShowSettings(false);
-        return appState;
-      }
-    };
   }
 
   @Bindable
@@ -135,57 +90,12 @@ public class AppState extends BaseObservable {
     notifyPropertyChanged(com.newfivefour.githubevents.BR.error);
   }
 
-  Func1<AppState, AppState> setErrorOnMap() {
-    return new Func1<AppState, AppState>() {
-      @Override
-      public AppState call(AppState appState) {
-        appState.setError(true);
-        return appState;
-      }
-    };
-  }
-  Func1<AppState, AppState> setErrorOffMap() {
-    return new Func1<AppState, AppState>() {
-      @Override
-      public AppState call(AppState appState) {
-        appState.setError(false);
-        return appState;
-      }
-    };
-  }
-
   public void setException(Throwable exception) {
     this.exception = exception;
   }
 
-  Func1<AppState, AppState> setExceptionOffMap() {
-    return new Func1<AppState, AppState>() {
-      @Override
-      public AppState call(AppState appState) {
-        appState.setException(null);
-        return appState;
-      }
-    };
-  }
-
-  void setUserJson(JsonObject userJson) {
-    this.userJson = userJson;
-  }
-
-  void setEventsJson(JsonArray eventsJson) {
-    this.eventsJson = eventsJson;
-  }
-
   public Throwable getException() {
     return exception;
-  }
-
-  public JsonArray getEventsJson() {
-    return eventsJson;
-  }
-
-  public JsonObject getUserJson() {
-    return userJson;
   }
 
   @Bindable
@@ -196,25 +106,6 @@ public class AppState extends BaseObservable {
   public void setPopupError(boolean popupError) {
     this.popupError = popupError;
     notifyPropertyChanged(com.newfivefour.githubevents.BR.popupError);
-  }
-
-  Func1<AppState, AppState> setPopupErrorOnMap() {
-    return new Func1<AppState, AppState>() {
-      @Override
-      public AppState call(AppState appState) {
-        appState.setPopupError(true);
-        return appState;
-      }
-    };
-  }
-  Func1<AppState, AppState> setPopupErrorOffMap() {
-    return new Func1<AppState, AppState>() {
-      @Override
-      public AppState call(AppState appState) {
-        appState.setPopupError(false);
-        return appState;
-      }
-    };
   }
 
   public String getAttemptedUsername() {
