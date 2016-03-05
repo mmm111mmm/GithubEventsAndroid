@@ -11,13 +11,15 @@ public class UseCases {
   };
 
   public static void init() {
+
+    // Actions observables
+    Observable<AppState> settingsOn = Actions.actionSent.filter(ActionsFiltersMaps.settingsOn).flatMap(ActionsFiltersMaps.justState);
+    Observable<AppState> settingsOff = Actions.actionSent.filter(ActionsFiltersMaps.settingsOff).flatMap(ActionsFiltersMaps.justState);
+    Observable<AppState> serverUpdateNoContent = Actions.actionSent.filter(ActionsFiltersMaps.serverUpdateIfNoContent).flatMap(ActionsFiltersMaps.extractUsername).filter(AppStateFilters.areNoEvents);
+    Observable<AppState> serverUpdateUsername = Actions.actionSent.filter(ActionsFiltersMaps.serverUpdateUsername).flatMap(ActionsFiltersMaps.extractUsernameInSettings);
+    Observable<AppState> serverUpdate = Actions.actionSent.filter(ActionsFiltersMaps.serverUpdate).flatMap(ActionsFiltersMaps.extractUsername);
+    Observable<AppState> updateRequest = Observable.merge(serverUpdateNoContent, serverUpdate, serverUpdateUsername);
     // Server observable list
-    // Refresh request
-    Observable<AppState> updateServerIfNothingThere = Actions.ServerUpdateActionIfNothingThere.react().filter(AppStateFilters.areNoEvents);
-    Observable<AppState> updateRequest = Observable.merge(
-            updateServerIfNothingThere,
-            Actions.ServerUpdateAction.react(),
-            Actions.ServerUpdateFromSettingsAction.react());
     ConnectableObservable<AppState> serverRefresh = updateRequest.flatMap(Server.zippedEventsUsers()).publish();
     Observable<AppState> serverRefreshParsed = serverRefresh.filter(AppStateFilters.noException);
     Observable<AppState> serverRefreshFail = serverRefresh.filter(AppStateFilters.hasException);
@@ -51,11 +53,11 @@ public class UseCases {
     .map(AppStateMaps.setPopupErrorOnMap)
     .subscribe(emptySubscribe);
     // Show settings
-    Actions.SettingsAction.react()
+    settingsOn
     .map(AppStateMaps.setSettingsOnMap)
     .subscribe(emptySubscribe);
     // Dismiss settings
-    Actions.SettingsAction.reactNoSettings()
+    settingsOff
     .map(AppStateMaps.setSettingsOffMap)
     .map(AppStateMaps.setErrorOffInSettings)
     .subscribe(emptySubscribe);
@@ -69,6 +71,8 @@ public class UseCases {
     .subscribe(emptySubscribe);
 
     // TODO: Time date seems to jump on update
+    // TODO: Cache in retrofit
+    // TODO: Save the application state
 
     serverRefresh.connect();
   }

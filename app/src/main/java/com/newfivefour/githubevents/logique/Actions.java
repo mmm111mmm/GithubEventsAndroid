@@ -6,101 +6,31 @@ import java.util.ArrayList;
 
 import rx.Observable;
 import rx.Subscriber;
-import rx.functions.Func1;
 
 public class Actions {
 
 
-  public static class SettingsAction extends Action<Boolean> {
+  static class SettingsAction extends Action<Boolean> {
     public SettingsAction(boolean show) {
       super(show);
     }
-    public static Observable<AppState> reactNoSettings() {
-      return actionSent.filter(new Func1<Action, Boolean>() {
-        @Override
-        public Boolean call(Action action) {
-          return action instanceof SettingsAction && !((SettingsAction)action).object;
-        }
-      }).flatMap(new Func1<Action, Observable<AppState>>() {
-        @Override
-        public Observable<AppState> call(Action action) {
-          return Observable.just(AppState.appState);
-        }
-      });
-    }
-    public static Observable<AppState> react() {
-      return actionSent.filter(new Func1<Action, Boolean>() {
-        @Override
-        public Boolean call(Action action) {
-          return action instanceof SettingsAction && ((SettingsAction)action).object;
-        }
-      }).flatMap(new Func1<Action, Observable<AppState>>() {
-        @Override
-        public Observable<AppState> call(Action action) {
-          return Observable.just(AppState.appState);
-        }
-      });
-    }
   }
 
-  public static class ServerUpdateAction extends Action<String> {
+  static class ServerUpdateAction extends Action<String> {
     public ServerUpdateAction(String username) {
       super(username);
     }
-    public static Observable<AppState> react() {
-      return actionSent.filter(new Func1<Action, Boolean>() {
-        @Override
-        public Boolean call(Action action) {
-          return action instanceof ServerUpdateAction;
-        }
-      })
-      .flatMap(new Func1<Action, Observable<AppState>>() {
-        @Override
-        public Observable<AppState> call(Action action) {
-          AppState.appState.setAttemptedUsername(((ServerUpdateAction)action).object);
-          return Observable.just(AppState.appState);
-        }
-      });
-    }
   }
 
-  public static class ServerUpdateActionIfNothingThere extends Action<String> {
+  static class ServerUpdateActionIfNothingThere extends Action<String> {
     public ServerUpdateActionIfNothingThere(String username) {
       super(username);
     }
-    public static Observable<AppState> react() {
-      return actionSent.filter(new Func1<Action, Boolean>() {
-        @Override
-        public Boolean call(Action action) {
-          return action instanceof ServerUpdateActionIfNothingThere;
-        }
-      })
-      .flatMap(new Func1<Action, Observable<AppState>>() {
-      @Override public Observable<AppState> call(Action action) {
-          AppState.appState.setAttemptedUsername(((ServerUpdateActionIfNothingThere)action).object);
-          return Observable.just(AppState.appState);
-       }
-      });
-    }
   }
 
-  public static class ServerUpdateFromSettingsAction extends Action<String> {
+  static class ServerUpdateFromSettingsAction extends Action<String> {
     public ServerUpdateFromSettingsAction(String username) {
       super(username);
-    }
-    public static Observable<AppState> react() {
-      return actionSent.filter(new Func1<Action, Boolean>() {
-        @Override public Boolean call(Action action) {
-          return action instanceof ServerUpdateFromSettingsAction;
-        }
-      })
-      .flatMap(new Func1<Action, Observable<AppState>>() {
-        @Override public Observable<AppState> call(Action action) {
-          AppState.appState.setAttemptedUsername(((ServerUpdateFromSettingsAction)action).object);
-          AppState.appState.setSettingsUsername(((ServerUpdateFromSettingsAction)action).object);
-          return Observable.just(AppState.appState);
-        }
-      });
     }
   }
 
