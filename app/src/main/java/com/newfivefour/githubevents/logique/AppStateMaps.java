@@ -78,6 +78,8 @@ public class AppStateMaps {
       switch (code) {
         case 403:
           return "Github no likee.";
+        case 404:
+          return "Github canny find 'im.";
         default:
           return "Github with a new exciting error.";
       }

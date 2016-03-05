@@ -10,9 +10,10 @@ import rx.functions.Func1;
 
 public class Actions {
 
+
   public static class SettingsAction extends Action<Boolean> {
     public SettingsAction(boolean show) {
-      super("SETTINGS", show);
+      super(show);
     }
     public static Observable<AppState> reactNoSettings() {
       return actionSent.filter(new Func1<Action, Boolean>() {
@@ -44,7 +45,7 @@ public class Actions {
 
   public static class ServerUpdateAction extends Action<String> {
     public ServerUpdateAction(String username) {
-      super("SERVERUPDATE", username);
+      super(username);
     }
     public static Observable<AppState> react() {
       return actionSent.filter(new Func1<Action, Boolean>() {
@@ -63,9 +64,29 @@ public class Actions {
     }
   }
 
+  public static class ServerUpdateActionIfNothingThere extends Action<String> {
+    public ServerUpdateActionIfNothingThere(String username) {
+      super(username);
+    }
+    public static Observable<AppState> react() {
+      return actionSent.filter(new Func1<Action, Boolean>() {
+        @Override
+        public Boolean call(Action action) {
+          return action instanceof ServerUpdateActionIfNothingThere;
+        }
+      })
+      .flatMap(new Func1<Action, Observable<AppState>>() {
+      @Override public Observable<AppState> call(Action action) {
+          AppState.appState.setAttemptedUsername(((ServerUpdateActionIfNothingThere)action).object);
+          return Observable.just(AppState.appState);
+       }
+      });
+    }
+  }
+
   public static class ServerUpdateFromSettingsAction extends Action<String> {
     public ServerUpdateFromSettingsAction(String username) {
-      super("USERNAMEUPDATE", username);
+      super(username);
     }
     public static Observable<AppState> react() {
       return actionSent.filter(new Func1<Action, Boolean>() {
@@ -88,6 +109,10 @@ public class Actions {
 
   public static void refresh() {
     callback.sendAction(new ServerUpdateAction(AppState.appState.getTitle()));
+  }
+
+  public static void refreshIfNothingThere() {
+    callback.sendAction(new ServerUpdateActionIfNothingThere(AppState.appState.getTitle()));
   }
 
   public static void changeUsername(String username) {
@@ -121,9 +146,7 @@ public class Actions {
 
   public abstract static class Action<T> {
     public final T object;
-    public final String name;
-    public Action(String name, T o) {
-      this.name = name;
+    public Action(T o) {
       this.object = o;
     }
   }

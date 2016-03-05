@@ -13,15 +13,18 @@ public class UseCases {
   public static void init() {
     // Server observable list
     // Refresh request
+    Observable<AppState> updateServerIfNothingThere = Actions.ServerUpdateActionIfNothingThere.react().filter(AppStateFilters.areNoEvents);
     Observable<AppState> updateRequest = Observable.merge(
+            updateServerIfNothingThere,
             Actions.ServerUpdateAction.react(),
             Actions.ServerUpdateFromSettingsAction.react());
     ConnectableObservable<AppState> serverRefresh = updateRequest.flatMap(Server.zippedEventsUsers()).publish();
     Observable<AppState> serverRefreshParsed = serverRefresh.filter(AppStateFilters.noException);
     Observable<AppState> serverRefreshFail = serverRefresh.filter(AppStateFilters.hasException);
-    Observable<AppState> serverRefreshFailInSettings = serverRefresh
-    .filter(AppStateFilters.hasException)
-    .filter(AppStateFilters.hasShownSettings);
+    Observable<AppState> serverFailNoContent = serverRefreshFail.filter(AppStateFilters.areNoEvents);
+    Observable<AppState> serverFailContent = serverRefreshFail.filter(AppStateFilters.areEvents);
+    Observable<AppState> serverFailInSettings = serverRefreshFail.filter(AppStateFilters.hasShownSettings);
+    Observable<AppState> serverFailNoSettingsWContent = serverFailContent.filter(AppStateFilters.hasNoShownSettings);
 
     // Subscriptions
     // Start loading and clear errors on service load
@@ -40,13 +43,11 @@ public class UseCases {
     serverRefreshParsed
     .subscribe(emptySubscribe);
     // Show page error when no content
-    serverRefreshFail.filter(AppStateFilters.areNoEvents)
+    serverFailNoContent
     .map(AppStateMaps.setErrorOnMap)
     .subscribe(emptySubscribe);
     // Popup error when content
-    serverRefreshFail
-    .filter(AppStateFilters.areEvents)
-    .filter(AppStateFilters.hasNoShownSettings)
+    serverFailNoSettingsWContent
     .map(AppStateMaps.setPopupErrorOnMap)
     .subscribe(emptySubscribe);
     // Show settings
@@ -63,12 +64,11 @@ public class UseCases {
     .map(AppStateMaps.setSettingsOffMap)
     .subscribe(emptySubscribe);
     // Show error in editttext when refresh in settings
-    serverRefreshFailInSettings
+    serverFailInSettings
     .map(AppStateMaps.setErrorInSettings)
     .subscribe(emptySubscribe);
 
     // TODO: Time date seems to jump on update
-    // TODO: Keep settings dialog up
 
     serverRefresh.connect();
   }

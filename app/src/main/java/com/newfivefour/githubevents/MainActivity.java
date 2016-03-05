@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     setSupportActionBar(bd.toolbar);
     bd.setAppState(AppState.appState);
     bd.setHandlers(new MainActivityHandlers());
-    Actions.refresh();
+    Actions.refreshIfNothingThere();
   }
 
   @Override
