@@ -14,19 +14,29 @@ public class Actions {
     public SettingsAction(boolean show) {
       super("SETTINGS", show);
     }
-    public static Observable<Action> reactNoSettings() {
+    public static Observable<AppState> reactNoSettings() {
       return actionSent.filter(new Func1<Action, Boolean>() {
         @Override
         public Boolean call(Action action) {
           return action instanceof SettingsAction && !((SettingsAction)action).object;
         }
+      }).flatMap(new Func1<Action, Observable<AppState>>() {
+        @Override
+        public Observable<AppState> call(Action action) {
+          return Observable.just(AppState.appState);
+        }
       });
     }
-    public static Observable<Action> react() {
+    public static Observable<AppState> react() {
       return actionSent.filter(new Func1<Action, Boolean>() {
         @Override
         public Boolean call(Action action) {
           return action instanceof SettingsAction && ((SettingsAction)action).object;
+        }
+      }).flatMap(new Func1<Action, Observable<AppState>>() {
+        @Override
+        public Observable<AppState> call(Action action) {
+          return Observable.just(AppState.appState);
         }
       });
     }
@@ -36,18 +46,18 @@ public class Actions {
     public ServerUpdateAction(String username) {
       super("USERNAMEUPDATE", username);
     }
-    public static Observable<String> react() {
+    public static Observable<AppState> react() {
       return actionSent.filter(new Func1<Action, Boolean>() {
         @Override
         public Boolean call(Action action) {
           return action instanceof ServerUpdateAction;
         }
       })
-      .flatMap(new Func1<Action, Observable<String>>() {
+      .flatMap(new Func1<Action, Observable<AppState>>() {
         @Override
-        public Observable<String> call(Action action) {
-          Log.d("HIYA", "flatmap Action: ");
-          return Observable.just(((ServerUpdateAction)action).object);
+        public Observable<AppState> call(Action action) {
+          AppState.appState.setAttemptedUsername(((ServerUpdateAction)action).object);
+          return Observable.just(AppState.appState);
         }
       });
     }

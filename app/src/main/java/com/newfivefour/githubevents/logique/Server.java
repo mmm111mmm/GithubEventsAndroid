@@ -1,7 +1,10 @@
 package com.newfivefour.githubevents.logique;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import java.util.ArrayList;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -12,6 +15,8 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 public class Server {
@@ -20,6 +25,7 @@ public class Server {
     @GET("users/{user}")
     Observable<JsonObject> getUser(@Path("user") String user);
   }
+
   interface GitHubEvents {
     @GET("users/{user}/events")
     Observable<JsonArray> listEvents(@Path("user") String user);
@@ -27,11 +33,6 @@ public class Server {
 
   static private HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
   static private OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
-
-  static {
-    interceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
-  }
-
   static private Retrofit sRepo = new Retrofit.Builder()
           .baseUrl("https://api.github.com")
           .client(client)
@@ -41,7 +42,70 @@ public class Server {
   static public GitHubUser ghUser = sRepo.create(GitHubUser.class);
   static public GitHubEvents ghEvents = sRepo.create(GitHubEvents.class);
 
-  public static <T> Observable.Transformer<T,T> composeAndroidSchedulers(T hmm) {
+  static private Func1<AppState, Observable<AppState>> user() {
+    return new Func1<AppState, Observable<AppState>>() {
+      @Override
+      public Observable<AppState> call(final AppState appState) {
+        return ghUser.getUser(appState.getAttemptedUsername()).compose(schedulers(JsonObject.class)).map(new Func1<JsonObject, AppState>() {
+          @Override
+          public AppState call(JsonObject user) {
+            appState.setAvatarUrl(user.get("avatar_url").getAsString());
+            appState.setTitle(user.get("login").getAsString());
+            appState.setUserUrl(user.get("html_url").getAsString());
+            return appState;
+          }
+        });
+      }
+    };
+  }
+
+  static private Func1<AppState, Observable<AppState>> events() {
+    return new Func1<AppState, Observable<AppState>>() {
+      @Override
+      public Observable<AppState> call(final AppState appState) {
+        return ghEvents.listEvents(appState.getAttemptedUsername()).compose(Server.schedulers(JsonArray.class)).map(new Func1<JsonArray, AppState>() {
+          @Override
+          public AppState call(JsonArray jsonEvents) {
+            ArrayList<AppState.Event> events = new ArrayList<>();
+            for (JsonElement a : jsonEvents) {
+              AppState.Event e = new AppState.Event();
+              e.setType(a.getAsJsonObject().get("type").getAsString());
+              JsonObject repo = a.getAsJsonObject().get("repo").getAsJsonObject();
+              e.setRepoName(repo.get("name").getAsString());
+              e.setRepoUrl("https://github.com/" + repo.get("name").getAsString());
+              e.setTime(a.getAsJsonObject().get("created_at").getAsString());
+              events.add(e);
+            }
+            appState.setEvents(events);
+            return appState;
+          }
+        });
+      }
+    };
+  }
+
+  static public Func1<AppState, Observable<AppState>> zippedEventsUsers() {
+    return new Func1<AppState, Observable<AppState>>() {
+      @Override public Observable<AppState> call(final AppState appState) {
+        return Observable.zip(
+          Observable.just(appState).flatMap(user()),
+          Observable.just(appState).flatMap(events()),
+          new Func2<AppState, AppState, AppState>() {
+            @Override public AppState call(AppState appState, AppState appState2) {
+              return appState;
+            }
+          })
+          .onErrorReturn(new Func1<Throwable, AppState>() {
+            @Override
+            public AppState call(Throwable throwable) {
+              appState.setException(throwable);
+              return appState;
+            }});
+      }
+    };
+  }
+
+  private static <T> Observable.Transformer<T, T> schedulers(Class<T> hmm) {
     return new Observable.Transformer<T, T>() {
       @Override
       public Observable<T> call(Observable<T> jsonArrayObservable) {
@@ -50,4 +114,9 @@ public class Server {
       }
     };
   }
+
+  static {
+    interceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
+  }
+
 }

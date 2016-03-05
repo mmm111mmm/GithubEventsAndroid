@@ -17,6 +17,7 @@ public class AppState extends BaseObservable {
   private ArrayList events = new ArrayList<Event>() {{
   }};
   private String title = "newfivefour";
+  private String attemptedUsername = "";
   private String userUrl = "";
   private String avatarUrl = "";
   private boolean loading = true;
@@ -157,6 +158,16 @@ public class AppState extends BaseObservable {
     this.exception = exception;
   }
 
+  Func1<AppState, AppState> setExceptionOffMap() {
+    return new Func1<AppState, AppState>() {
+      @Override
+      public AppState call(AppState appState) {
+        appState.setException(null);
+        return appState;
+      }
+    };
+  }
+
   void setUserJson(JsonObject userJson) {
     this.userJson = userJson;
   }
@@ -204,6 +215,14 @@ public class AppState extends BaseObservable {
         return appState;
       }
     };
+  }
+
+  public String getAttemptedUsername() {
+    return attemptedUsername;
+  }
+
+  public void setAttemptedUsername(String attemptedUsername) {
+    this.attemptedUsername = attemptedUsername;
   }
 
   public static class Event extends BaseObservable {
