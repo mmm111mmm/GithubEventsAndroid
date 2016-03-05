@@ -65,24 +65,23 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="@{appState.error ? View.VISIBLE: View.GONE}"
+        android:visibility="@{appState.error != null ? View.VISIBLE: View.GONE}"
         >
       <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:padding="8dp"
-          android:drawablePadding="6dp"
-          android:text="Error loading feed"
+          android:text="@{appState.error}"
+          tools:text="Some kind of error"
           android:textAppearance="?android:attr/textAppearanceLarge"
           android:textSize="24dp"
           android:layout_centerInParent="true"
-          android:drawableLeft="@android:drawable/stat_notify_error"
           />
     </RelativeLayout>
     <com.newfivefour.githubevents.ErrorPopupView
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        app:setShow="@{appState.popupError}"
+        app:setShow="@{appState.popupError != null}"
         />
     <com.newfivefour.githubevents.SettingsDialogView
         app:show="@{appState.showSettings}"
@@ -96,7 +95,7 @@
         app:layout_anchor="@+id/mainactivity_coordinatorlayout"
         android:layout_gravity="bottom|end"
         android:layout_margin="8dp"
-        android:src="@mipmap/ic_launcher"
+        android:src="@android:drawable/ic_popup_sync"
         app:layout_behavior="com.newfivefour.githubevents.utils.ScrollAwareFABBehavior"
         android:onClick="@{handlers.onRefresh}"
         />

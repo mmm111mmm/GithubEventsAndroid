@@ -14,10 +14,13 @@ import com.newfivefour.githubevents.logique.UseCases;
 
 public class MainActivity extends AppCompatActivity {
 
+  static {
+    UseCases.init();
+  }
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    UseCases.init();
     MainActivityBinding bd = DataBindingUtil.setContentView(this, R.layout.main_activity);
     setSupportActionBar(bd.toolbar);
     bd.setAppState(AppState.appState);

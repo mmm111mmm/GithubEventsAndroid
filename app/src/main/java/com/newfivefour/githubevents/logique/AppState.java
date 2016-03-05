@@ -12,16 +12,17 @@ public class AppState extends BaseObservable {
   private ArrayList events = new ArrayList<Event>() {{}};
   private String title = "newfivefour";
   private String attemptedUsername = "";
+  private String settingsUsername = "";
   private String userUrl = "";
   private String avatarUrl = "";
   private boolean loading = true;
-  private boolean error = false;
-  private boolean popupError = false;
+  private String error;
+  private String errorInSettings;
+  private String popupError;
   private boolean showSettings = false;
   private Throwable exception;
 
-  @Bindable
-  public ArrayList<Event> getEvents() {
+  @Bindable public ArrayList<Event> getEvents() {
     return events;
   }
 
@@ -30,8 +31,7 @@ public class AppState extends BaseObservable {
     notifyPropertyChanged(com.newfivefour.githubevents.BR.events);
   }
 
-  @Bindable
-  public String getTitle() {
+  @Bindable public String getTitle() {
     return title;
   }
 
@@ -40,8 +40,7 @@ public class AppState extends BaseObservable {
     notifyPropertyChanged(com.newfivefour.githubevents.BR.title);
   }
 
-  @Bindable
-  public String getAvatarUrl() {
+  @Bindable public String getAvatarUrl() {
     return avatarUrl;
   }
 
@@ -50,8 +49,7 @@ public class AppState extends BaseObservable {
     notifyPropertyChanged(com.newfivefour.githubevents.BR.avatarUrl);
   }
 
-  @Bindable
-  public String getUserUrl() {
+  @Bindable public String getUserUrl() {
     return userUrl;
   }
 
@@ -60,8 +58,7 @@ public class AppState extends BaseObservable {
     notifyPropertyChanged(com.newfivefour.githubevents.BR.userUrl);
   }
 
-  @Bindable
-  public boolean isLoading() {
+  @Bindable public boolean isLoading() {
     return loading;
   }
 
@@ -70,8 +67,7 @@ public class AppState extends BaseObservable {
     notifyPropertyChanged(com.newfivefour.githubevents.BR.loading);
   }
 
-  @Bindable
-  public boolean isShowSettings() {
+  @Bindable public boolean isShowSettings() {
     return showSettings;
   }
 
@@ -80,12 +76,11 @@ public class AppState extends BaseObservable {
     notifyPropertyChanged(com.newfivefour.githubevents.BR.showSettings);
   }
 
-  @Bindable
-  public boolean isError() {
+  @Bindable public String getError() {
     return error;
   }
 
-  void setError(boolean error) {
+  void setError(String error) {
     this.error = error;
     notifyPropertyChanged(com.newfivefour.githubevents.BR.error);
   }
@@ -98,22 +93,40 @@ public class AppState extends BaseObservable {
     return exception;
   }
 
-  @Bindable
-  public boolean isPopupError() {
+  @Bindable public String getPopupError() {
     return popupError;
   }
 
-  public void setPopupError(boolean popupError) {
+  public void setPopupError(String popupError) {
     this.popupError = popupError;
     notifyPropertyChanged(com.newfivefour.githubevents.BR.popupError);
   }
 
-  public String getAttemptedUsername() {
+  @Bindable public String getAttemptedUsername() {
     return attemptedUsername;
   }
 
   public void setAttemptedUsername(String attemptedUsername) {
     this.attemptedUsername = attemptedUsername;
+    notifyPropertyChanged(com.newfivefour.githubevents.BR.attemptedUsername);
+  }
+
+  @Bindable public String getErrorInSettings() {
+    return errorInSettings;
+  }
+
+  public void setErrorInSettings(String errorInSettings) {
+    this.errorInSettings = errorInSettings;
+    notifyPropertyChanged(com.newfivefour.githubevents.BR.errorInSettings);
+  }
+
+  @Bindable public String getSettingsUsername() {
+    return settingsUsername;
+  }
+
+  public void setSettingsUsername(String settingsUsername) {
+    this.settingsUsername = settingsUsername;
+    notifyPropertyChanged(com.newfivefour.githubevents.BR.settingsUsername);
   }
 
   public static class Event extends BaseObservable {
@@ -131,8 +144,7 @@ public class AppState extends BaseObservable {
       this.repoName = repo_name;
     }
 
-    @Bindable
-    public String getType() {
+    @Bindable public String getType() {
       return type;
     }
 
@@ -140,8 +152,7 @@ public class AppState extends BaseObservable {
       this.type = type;
     }
 
-    @Bindable
-    public String getTime() {
+    @Bindable public String getTime() {
       return time;
     }
 
@@ -149,8 +160,7 @@ public class AppState extends BaseObservable {
       this.time = time;
     }
 
-    @Bindable
-    public String getRepoName() {
+    @Bindable public String getRepoName() {
       return repoName;
     }
 
@@ -158,8 +168,7 @@ public class AppState extends BaseObservable {
       this.repoName = repoName;
     }
 
-    @Bindable
-    public String getRepoUrl() {
+    @Bindable public String getRepoUrl() {
       return repoUrl;
     }
 

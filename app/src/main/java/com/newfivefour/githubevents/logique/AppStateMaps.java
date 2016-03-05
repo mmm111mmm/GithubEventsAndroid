@@ -1,17 +1,18 @@
 package com.newfivefour.githubevents.logique;
 
+import retrofit2.adapter.rxjava.HttpException;
 import rx.functions.Func1;
 
 public class AppStateMaps {
   static Func1<AppState, AppState> setErrorOnMap = new Func1<AppState, AppState>() {
     @Override public AppState call(AppState appState) {
-      appState.setError(true);
+      appState.setError(parseException(appState.getException()));
       return appState;
     }
   };
   static Func1<AppState, AppState> setErrorOffMap = new Func1<AppState, AppState>() {
     @Override public AppState call(AppState appState) {
-      appState.setError(false);
+      appState.setError(null);
       return appState;
     }
   };
@@ -41,13 +42,25 @@ public class AppStateMaps {
   };
   static Func1<AppState, AppState> setPopupErrorOnMap = new Func1<AppState, AppState>() {
     @Override public AppState call(AppState appState) {
-      appState.setPopupError(true);
+      appState.setPopupError(parseException(appState.getException()));
       return appState;
     }
   };
   static Func1<AppState, AppState> setPopupErrorOffMap = new Func1<AppState, AppState>() {
     @Override public AppState call(AppState appState) {
-      appState.setPopupError(false);
+      appState.setPopupError(null);
+      return appState;
+    }
+  };
+  static Func1<AppState, AppState> setErrorInSettings = new Func1<AppState, AppState>() {
+    @Override public AppState call(AppState appState) {
+      appState.setErrorInSettings(parseException(appState.getException()));
+      return appState;
+    }
+  };
+  static Func1<AppState, AppState> setErrorOffInSettings = new Func1<AppState, AppState>() {
+    @Override public AppState call(AppState appState) {
+      appState.setErrorInSettings(null);
       return appState;
     }
   };
@@ -57,4 +70,18 @@ public class AppStateMaps {
       return appState;
     }
   };
+
+  private static String parseException(Throwable thr) {
+    if(thr instanceof HttpException) {
+      HttpException he = (HttpException) thr;
+      int code = he.code();
+      switch (code) {
+        case 403:
+          return "Github no likee.";
+        default:
+          return "Github with a new exciting error.";
+      }
+    }
+    return "Some kind of error, innit";
+  }
 }

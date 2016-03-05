@@ -61,6 +61,7 @@ public class EventsListView extends FrameLayout {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+      holder.binding.eventlistitemDatetextview.setText("");
       holder.binding.setEvent(mEvents.get(position));
     }
 

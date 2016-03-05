@@ -44,7 +44,7 @@ public class Actions {
 
   public static class ServerUpdateAction extends Action<String> {
     public ServerUpdateAction(String username) {
-      super("USERNAMEUPDATE", username);
+      super("SERVERUPDATE", username);
     }
     public static Observable<AppState> react() {
       return actionSent.filter(new Func1<Action, Boolean>() {
@@ -63,6 +63,26 @@ public class Actions {
     }
   }
 
+  public static class ServerUpdateFromSettingsAction extends Action<String> {
+    public ServerUpdateFromSettingsAction(String username) {
+      super("USERNAMEUPDATE", username);
+    }
+    public static Observable<AppState> react() {
+      return actionSent.filter(new Func1<Action, Boolean>() {
+        @Override public Boolean call(Action action) {
+          return action instanceof ServerUpdateFromSettingsAction;
+        }
+      })
+      .flatMap(new Func1<Action, Observable<AppState>>() {
+        @Override public Observable<AppState> call(Action action) {
+          AppState.appState.setAttemptedUsername(((ServerUpdateFromSettingsAction)action).object);
+          AppState.appState.setSettingsUsername(((ServerUpdateFromSettingsAction)action).object);
+          return Observable.just(AppState.appState);
+        }
+      });
+    }
+  }
+
   private static ActionsCallback callback;
   public static Observable<Action> actionSent = Observable.create(new ActionsObservable());
 
@@ -71,7 +91,7 @@ public class Actions {
   }
 
   public static void changeUsername(String username) {
-    callback.sendAction(new ServerUpdateAction(username));
+    callback.sendAction(new ServerUpdateFromSettingsAction(username));
   }
 
   public static void settings(boolean show) {
