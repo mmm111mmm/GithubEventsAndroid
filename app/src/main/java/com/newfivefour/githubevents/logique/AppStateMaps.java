@@ -11,6 +11,12 @@ public class AppStateMaps {
       return appState;
     }
   };
+  static Func1<AppState, AppState> setNoConnectionMainError = new Func1<AppState, AppState>() {
+    @Override public AppState call(AppState appState) {
+      appState.setError("No internet connection, boooooi.");
+      return appState;
+    }
+  };
   static Func1<AppState, AppState> setErrorOffMap = new Func1<AppState, AppState>() {
     @Override public AppState call(AppState appState) {
       appState.setError(null);
@@ -47,6 +53,12 @@ public class AppStateMaps {
       return appState;
     }
   };
+  static Func1<AppState, AppState> setNoConnectionPopup = new Func1<AppState, AppState>() {
+    @Override public AppState call(AppState appState) {
+      appState.setPopupError("No internet connection, boooooi.");
+      return appState;
+    }
+  };
   static Func1<AppState, AppState> setPopupErrorOffMap = new Func1<AppState, AppState>() {
     @Override public AppState call(AppState appState) {
       appState.setPopupError(null);
@@ -71,5 +83,4 @@ public class AppStateMaps {
       return appState;
     }
   };
-
 }

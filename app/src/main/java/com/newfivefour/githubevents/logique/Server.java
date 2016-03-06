@@ -39,7 +39,7 @@ public class Server {
 
   static private HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
   static {
-    interceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);
+    interceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
   }
   static private OkHttpClient client = new OkHttpClient
           .Builder()

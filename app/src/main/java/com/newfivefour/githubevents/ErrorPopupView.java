@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import com.newfivefour.githubevents.logique.AppState;
@@ -41,17 +42,22 @@ public class ErrorPopupView extends View {
       @Override
       public void onClick(View view) {
         mSnackBar.dismiss();
+        mSnackBar = null;
       }};
   }
 
   public void setShow(boolean show) {
-    if(show && (mSnackBar==null || !mSnackBar.isShown())) {
+    Log.d("HIYA", "Showing popup: " + show);
+    if(show && (mSnackBar==null)) {
+      Log.d("HIYA", "Really showing");
       mCoordinatorLayout = Utils.scanForCoordinator(this);
-      mSnackBar = Snackbar.make(mCoordinatorLayout, "There's been an error, innit", Snackbar.LENGTH_INDEFINITE);
+      mSnackBar = Snackbar.make(mCoordinatorLayout, AppState.appState.getPopupError(), Snackbar.LENGTH_INDEFINITE);
       mSnackBar.setAction("Dismiss", getDismissListener());
       mSnackBar.show();
     } else if (!show && mSnackBar!=null && mSnackBar.isShown()) {
+      Log.d("HIYA", "Really dismissing");
       mSnackBar.dismiss();
+      mSnackBar = null;
     }
   }
 

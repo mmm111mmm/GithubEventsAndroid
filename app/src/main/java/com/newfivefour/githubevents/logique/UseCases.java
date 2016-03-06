@@ -27,6 +27,8 @@ public class UseCases {
     Observable<AppState> serverFailContent = serverRefreshFail.filter(AppStateFilters.areEvents);
     Observable<AppState> serverFailInSettings = serverRefreshFail.filter(AppStateFilters.hasShownSettings);
     Observable<AppState> serverFailNoSettingsWContent = serverFailContent.filter(AppStateFilters.hasNoShownSettings);
+    Observable<AppState> noNetConnectionContent = serverRefresh.filter(AppStateFilters.noInternetConnection).filter(AppStateFilters.areEvents);
+    Observable<AppState> noNetConnectionNoContent = serverRefresh.filter(AppStateFilters.noInternetConnection).filter(AppStateFilters.areNoEvents);
 
     // Subscriptions
     // Start loading and clear errors on service load
@@ -34,8 +36,8 @@ public class UseCases {
     .map(AppStateMaps.setExceptionOffMap)
     .map(AppStateMaps.setLoadingOnMap)
     .map(AppStateMaps.setErrorOffInSettings)
-    .map(AppStateMaps.setPopupErrorOffMap)
     .map(AppStateMaps.setErrorOffMap)
+    .map(AppStateMaps.setPopupErrorOffMap)
     .subscribe(emptySubscribe);
     // Stop loading page after a server refresh
     serverRefresh
@@ -69,10 +71,18 @@ public class UseCases {
     serverFailInSettings
     .map(AppStateMaps.setErrorInSettings)
     .subscribe(emptySubscribe);
+    // Show no connection error
+    noNetConnectionContent
+    .map(AppStateMaps.setNoConnectionPopup)
+    .subscribe(emptySubscribe);
+    // Show no connection error with no content
+    noNetConnectionNoContent
+    .map(AppStateMaps.setNoConnectionMainError)
+    .subscribe(emptySubscribe);
 
-    // TODO: No connection error even when cache returned
     // TODO: Time date seems to jump on update
-    // TODO: Save the application state
+    // TODO: Start learning about widgets
+    // TODO: Create one and pubilsh to store
 
     serverRefresh.connect();
   }

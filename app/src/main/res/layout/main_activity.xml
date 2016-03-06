@@ -62,22 +62,18 @@
         android:indeterminateBehavior="cycle"
         android:visibility="@{appState.loading ? View.VISIBLE: View.GONE}"
         />
-    <RelativeLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="@{appState.error != null ? View.VISIBLE: View.GONE}"
-        >
-      <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:padding="8dp"
-          android:text="@{appState.error}"
-          tools:text="Some kind of error"
-          android:textAppearance="?android:attr/textAppearanceLarge"
-          android:textSize="24dp"
-          android:layout_centerInParent="true"
-          />
-    </RelativeLayout>
+        android:padding="8dp"
+        android:text="@{appState.error}"
+        tools:text="Some kind of error"
+        android:gravity="center"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="24dp"
+        android:layout_centerInParent="true"
+        />
     <com.newfivefour.githubevents.ErrorPopupView
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"

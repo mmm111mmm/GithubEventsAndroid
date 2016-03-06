@@ -1,5 +1,7 @@
 package com.newfivefour.githubevents.logique;
 
+import com.newfivefour.githubevents.App;
+
 import rx.functions.Func1;
 
 public class AppStateFilters {
@@ -31,6 +33,16 @@ public class AppStateFilters {
   static Func1<AppState, Boolean> noException = new Func1<AppState, Boolean>() {
     @Override public Boolean call(AppState as) {
       return as.getException() == null;
+    }
+  };
+  static Func1<Object, Boolean> noInternetConnection = new Func1<Object, Boolean>() {
+    @Override public Boolean call(Object object) {
+      return !App.isNetworkAvailable();
+    }
+  };
+  static Func1<Object, Boolean> internetConnection = new Func1<Object, Boolean>() {
+    @Override public Boolean call(Object object) {
+      return App.isNetworkAvailable();
     }
   };
 }
