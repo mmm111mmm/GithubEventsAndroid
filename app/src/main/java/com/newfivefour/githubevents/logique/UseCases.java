@@ -70,8 +70,10 @@ public class UseCases {
     .map(AppStateMaps.setErrorInSettings)
     .subscribe(emptySubscribe);
 
+    // TODO: Error talking about no connection
+    // TODO: Cache images
+
     // TODO: Time date seems to jump on update
-    // TODO: Cache in retrofit
     // TODO: Save the application state
 
     serverRefresh.connect();

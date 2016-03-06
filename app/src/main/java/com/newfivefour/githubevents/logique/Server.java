@@ -3,10 +3,16 @@ package com.newfivefour.githubevents.logique;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.newfivefour.githubevents.App;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
+import okhttp3.Cache;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -32,7 +38,30 @@ public class Server {
   }
 
   static private HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-  static private OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+  static {
+    interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+  }
+  static private OkHttpClient client = new OkHttpClient
+          .Builder()
+          .addInterceptor(new Interceptor() {
+            @Override public Response intercept(Chain chain) throws IOException {
+              Request request = chain.request();
+              if (App.isNetworkAvailable()) {
+                int maxAge = 60; // read from cache for 1 minute
+                request.newBuilder().header("Cache-Control", "public, max-age=" + maxAge).build();
+              } else {
+                int maxStale = 60 * 60 * 24 * 28; // tolerate 4-weeks stale
+                request.newBuilder().header("Cache-Control", "public, only-if-cached, max-stale=" + maxStale);
+              }
+              Response originalResponse = chain.proceed(request);
+              return originalResponse.newBuilder()
+                                     .header("Cache-Control", "max-age=600")
+                                     .build();
+            }
+          })
+          .cache(new Cache(App.sApp.getCacheDir(), 10 * 1024 * 1024))
+          .addInterceptor(interceptor)
+          .build();
   static private Retrofit sRepo = new Retrofit.Builder()
           .baseUrl("https://api.github.com")
           .client(client)
@@ -113,10 +142,6 @@ public class Server {
                                   .observeOn(AndroidSchedulers.mainThread());
       }
     };
-  }
-
-  static {
-    interceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
   }
 
 }
