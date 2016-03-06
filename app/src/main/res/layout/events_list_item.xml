@@ -28,6 +28,7 @@
         android:orientation="vertical"
         >
       <TextView
+          android:id="@+id/eventlistitem_timetextview"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:textAppearance="?android:attr/textAppearanceListItemSmall"
@@ -44,7 +45,7 @@
           android:orientation="horizontal"
           >
         <TextView
-            android:id="@+id/eventlistitem_datetextview"
+            android:id="@+id/eventlistitem_nametextview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceListItemSmall"
@@ -53,6 +54,7 @@
             tools:text="Pushed to"
             />
         <TextView
+            android:id="@+id/eventlistitem_reponametextview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceListItemSmall"

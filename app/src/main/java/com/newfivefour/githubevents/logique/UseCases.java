@@ -75,7 +75,6 @@ public class UseCases {
     .map(AppStateMaps.setNoConnectionPopup)
     .subscribe(emptySubscribe);
 
-    // TODO: Time date seems to jump on update
     // TODO: Start learning about widgets
     // TODO: Create one and pubilsh to store
 

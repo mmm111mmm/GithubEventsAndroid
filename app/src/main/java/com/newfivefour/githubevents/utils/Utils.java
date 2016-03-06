@@ -114,6 +114,7 @@ public class Utils {
           return "Github no likee.";
         case 404:
           return "Github canny find 'im.";
+        // Since in the Server class, we only try cache when there's no connection
         case 504:
           return "Internet connection no worky.";
         default:
