@@ -47,16 +47,11 @@ public class Server {
             @Override public Response intercept(Chain chain) throws IOException {
               Request request = chain.request();
               if (App.isNetworkAvailable()) {
-                int maxAge = 60; // read from cache for 1 minute
-                request.newBuilder().header("Cache-Control", "public, max-age=" + maxAge).build();
+                request.newBuilder().header("Cache-Control", "public, max-age=" + 60).build();
               } else {
-                int maxStale = 60 * 60 * 24 * 28; // tolerate 4-weeks stale
-                request.newBuilder().header("Cache-Control", "public, only-if-cached, max-stale=" + maxStale);
+                request.newBuilder().header("Cache-Control", "public, only-if-cached, max-stale=" + 60 * 60 * 24 * 28);
               }
-              Response originalResponse = chain.proceed(request);
-              return originalResponse.newBuilder()
-                                     .header("Cache-Control", "max-age=600")
-                                     .build();
+              return chain.proceed(request).newBuilder().build();
             }
           })
           .cache(new Cache(App.sApp.getCacheDir(), 10 * 1024 * 1024))

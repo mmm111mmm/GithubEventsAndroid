@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
+import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -44,8 +45,11 @@ public class BindingAdapters {
     };
     if(s!=null && s.length()>0) {
       willinglyStupid(t);
-      Picasso with = Picasso.with(toolbar.getContext());
-      with.load(s).into(t);
+      new Picasso.Builder(toolbar.getContext())
+        .downloader(new OkHttpDownloader(toolbar.getContext(), Integer.MAX_VALUE))
+        .build()
+        .load(s)
+        .into(t);
     }
   }
 

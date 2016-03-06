@@ -71,7 +71,6 @@ public class UseCases {
     .subscribe(emptySubscribe);
 
     // TODO: Error talking about no connection
-    // TODO: Cache images
 
     // TODO: Time date seems to jump on update
     // TODO: Save the application state
