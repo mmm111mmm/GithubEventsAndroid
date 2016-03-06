@@ -114,6 +114,8 @@ public class Utils {
           return "Github no likee.";
         case 404:
           return "Github canny find 'im.";
+        case 504:
+          return "Internet connection no worky.";
         default:
           return "Github with a new exciting error.";
       }

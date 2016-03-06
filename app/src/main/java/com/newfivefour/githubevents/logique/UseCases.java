@@ -27,8 +27,7 @@ public class UseCases {
     Observable<AppState> serverFailContent = serverRefreshFail.filter(AppStateFilters.areEvents);
     Observable<AppState> serverFailInSettings = serverRefreshFail.filter(AppStateFilters.hasShownSettings);
     Observable<AppState> serverFailNoSettingsWContent = serverFailContent.filter(AppStateFilters.hasNoShownSettings);
-    Observable<AppState> noNetConnectionContent = serverRefresh.filter(AppStateFilters.noInternetConnection).filter(AppStateFilters.areEvents);
-    Observable<AppState> noNetConnectionNoContent = serverRefresh.filter(AppStateFilters.noInternetConnection).filter(AppStateFilters.areNoEvents);
+    Observable<AppState> noNetConnContentNoSettings = serverRefresh.filter(AppStateFilters.noInternetConnection).filter(AppStateFilters.areEvents).filter(AppStateFilters.hasNoShownSettings);
 
     // Subscriptions
     // Start loading and clear errors on service load
@@ -72,12 +71,8 @@ public class UseCases {
     .map(AppStateMaps.setErrorInSettings)
     .subscribe(emptySubscribe);
     // Show no connection error
-    noNetConnectionContent
+    noNetConnContentNoSettings
     .map(AppStateMaps.setNoConnectionPopup)
-    .subscribe(emptySubscribe);
-    // Show no connection error with no content
-    noNetConnectionNoContent
-    .map(AppStateMaps.setNoConnectionMainError)
     .subscribe(emptySubscribe);
 
     // TODO: Time date seems to jump on update
