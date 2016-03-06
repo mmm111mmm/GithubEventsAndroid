@@ -10,11 +10,14 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 
+import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+
+import retrofit2.adapter.rxjava.HttpException;
 
 public class Utils {
 
@@ -100,6 +103,25 @@ public class Utils {
       Fragment f = ((FragmentActivity)c).getSupportFragmentManager().findFragmentByTag(tag);
       ((DialogFragment)f).dismiss();
     }
+  }
+
+  public static String parseNetworkException(Throwable thr) {
+    if(thr instanceof HttpException) {
+      HttpException he = (HttpException) thr;
+      int code = he.code();
+      switch (code) {
+        case 403:
+          return "Github no likee.";
+        case 404:
+          return "Github canny find 'im.";
+        default:
+          return "Github with a new exciting error.";
+      }
+    }
+    if(thr instanceof UnknownHostException) {
+      return "Internet connection no worky.";
+    }
+    return "Some kind of error, innit";
   }
 
 }

@@ -39,7 +39,7 @@ public class Server {
 
   static private HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
   static {
-    interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+    interceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);
   }
   static private OkHttpClient client = new OkHttpClient
           .Builder()
@@ -47,14 +47,14 @@ public class Server {
             @Override public Response intercept(Chain chain) throws IOException {
               Request request = chain.request();
               if (App.isNetworkAvailable()) {
-                request.newBuilder().header("Cache-Control", "public, max-age=" + 60).build();
+                request = request.newBuilder().header("Cache-Control", "public, max-age=" + 60).build();
               } else {
-                request.newBuilder().header("Cache-Control", "public, only-if-cached, max-stale=" + 60 * 60 * 24 * 28);
+                request = request.newBuilder().header("Cache-Control", "public, only-if-cached, max-stale=" + 60 * 60 * 24 * 28).build();
               }
-              return chain.proceed(request).newBuilder().build();
+              return chain.proceed(request);
             }
           })
-          .cache(new Cache(App.sApp.getCacheDir(), 10 * 1024 * 1024))
+          .cache(new Cache(App.sApp.getCacheDir(), 30 * 1024 * 1024))
           .addInterceptor(interceptor)
           .build();
   static private Retrofit sRepo = new Retrofit.Builder()
