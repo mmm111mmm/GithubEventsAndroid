@@ -10,7 +10,7 @@
         />
     <variable
         name="handlers"
-        type="com.newfivefour.githubevents.SettingsDialogHandlers"
+        type="com.newfivefour.githubevents.DataBindingHandlers"
         />
   </data>
   <RelativeLayout
@@ -27,7 +27,7 @@
         android:lines="5"
         app:textIfNotBlank="@{appState.settingsUsername}"
         android:hint="The new username"
-        android:onEditorAction="@{handlers.onUsernameChange}"
+        android:onEditorAction="@{handlers::onUsernameChange}"
         android:imeOptions="actionDone"
         android:inputType="text"
         android:layout_centerVertical="true"

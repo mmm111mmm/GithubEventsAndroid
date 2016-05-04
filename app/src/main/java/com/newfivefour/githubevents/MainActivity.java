@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     MainActivityBinding bd = DataBindingUtil.setContentView(this, R.layout.main_activity);
     setSupportActionBar(bd.toolbar);
     bd.setAppState(AppState.appState);
-    bd.setHandlers(new MainActivityHandlers());
+    bd.setHandlers(new DataBindingHandlers());
     Actions.refreshIfNothingThere();
   }
 

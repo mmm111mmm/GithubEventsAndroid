@@ -12,7 +12,7 @@
         />
     <variable
         name="handlers"
-        type="com.newfivefour.githubevents.MainActivityHandlers"
+        type="com.newfivefour.githubevents.DataBindingHandlers"
         />
   </data>
   <android.support.design.widget.CoordinatorLayout
@@ -88,7 +88,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_anchorGravity="bottom|right"
-        app:layout_anchor="@+id/mainactivity_coordinatorlayout"
         android:layout_gravity="bottom|end"
         android:layout_margin="8dp"
         android:src="@android:drawable/ic_popup_sync"

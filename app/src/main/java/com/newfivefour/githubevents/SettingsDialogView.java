@@ -82,7 +82,7 @@ public class SettingsDialogView extends View {
       AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
       UsernameDialogBinding dialog = DataBindingUtil.inflate(getActivity().getLayoutInflater(), R.layout.username_dialog, null, false);
       dialog.setVariable(com.newfivefour.githubevents.BR.appState, AppState.appState);
-      dialog.setVariable(com.newfivefour.githubevents.BR.handlers, new SettingsDialogHandlers());
+      dialog.setVariable(com.newfivefour.githubevents.BR.handlers, new DataBindingHandlers());
       builder.setView(dialog.getRoot());
       return builder.create();
     }

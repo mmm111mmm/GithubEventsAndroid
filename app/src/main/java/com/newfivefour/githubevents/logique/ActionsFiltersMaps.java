@@ -15,6 +15,7 @@ public class ActionsFiltersMaps {
       return action instanceof Actions.SettingsAction && !((Actions.SettingsAction) action).object;
     }
   };
+
   static Func1<Actions.Action, Boolean> serverUpdate = new Func1<Actions.Action, Boolean>() {
     @Override public Boolean call(Actions.Action action) {
       return action instanceof Actions.ServerUpdateAction;
