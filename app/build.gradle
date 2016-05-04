@@ -5,6 +5,21 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
 
+    lintOptions {
+       abortOnError false
+    }
+
+    Properties props = new Properties()
+    props.load(new FileInputStream(file("signing.properties")))
+    signingConfigs {
+    	release {
+        	storeFile file(props['keystore'])
+                storePassword props['keystore.password']
+                keyAlias props['keyAlias']
+                keyPassword props['keyPassword']
+        }
+    }
+
     dataBinding {
         enabled = true
     }
@@ -13,11 +28,12 @@ android {
         applicationId "com.newfivefour.githubevents"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "0.1"
     }
     buildTypes {
         release {
+	    signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
