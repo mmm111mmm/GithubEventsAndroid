@@ -11,14 +11,14 @@ android {
 
     Properties props = new Properties()
     props.load(new FileInputStream(file("signing.properties")))
-    signingConfigs {
+    /*signingConfigs {
     	release {
         	storeFile file(props['keystore'])
                 storePassword props['keystore.password']
                 keyAlias props['keyAlias']
                 keyPassword props['keyPassword']
         }
-    }
+    }*/
 
     dataBinding {
         enabled = true
@@ -32,11 +32,11 @@ android {
         versionName "0.1"
     }
     buildTypes {
-        release {
+        /*release {
 	    signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+        }*/
     }
 }
 
