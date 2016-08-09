@@ -9,9 +9,9 @@ android {
        abortOnError false
     }
 
-    Properties props = new Properties()
+    /*Properties props = new Properties()
     props.load(new FileInputStream(file("signing.properties")))
-    /*signingConfigs {
+    signingConfigs {
     	release {
         	storeFile file(props['keystore'])
                 storePassword props['keystore.password']
